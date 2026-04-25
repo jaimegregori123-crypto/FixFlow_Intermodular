@@ -5,10 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Conexion {
-    // Datos de tu base de datos en XAMPP
     private static final String URL = "jdbc:mysql://localhost:3306/fixflow_db";
     private static final String USER = "root";
-    private static final String PASSWORD = ""; // Por defecto en XAMPP está vacío
+    private static final String PASSWORD = "";
 
     public static Connection obtenerConexion() {
         Connection conexion = null;
