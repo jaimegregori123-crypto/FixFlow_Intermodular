@@ -1,22 +1,19 @@
 package com.fixflow.main;
 
-import com.fixflow.dao.ActivoDAO;
-import com.fixflow.dao.UsuarioDAO;
-import com.fixflow.modelos.Activo;
-import com.fixflow.modelos.Usuario;
+import com.fixflow.dao.IncidenciaDAO;
+import com.fixflow.modelos.Incidencia;
 
 public class Main {
     public static void main(String[] args) {
-        ActivoDAO activoDao = new ActivoDAO();
+        IncidenciaDAO dao = new IncidenciaDAO();
 
-        // Creamos una caldera con estado "Operativo"
-        // Asegúrate de que el constructor de Activo.java acepte: (id, nombre, ubicacion, estado)
-        Activo caldera = new Activo(0, "Caldera Central", "Sótano -1", "Operativo");
+        // El 0 es para el ID (se autogenera), el 1 es el ID del activo (la caldera)
+        Incidencia nueva = new Incidencia(0, "Ruido en Caldera", "Hace un soplido fuerte al arrancar", "MEDIA", 1);
 
-        if (activoDao.insertarActivo(caldera)) {
-            System.out.println("✅ ¡Activo insertado correctamente!");
+        if (dao.reportarIncidencia(nueva)) {
+            System.out.println("✅ ¡Incidencia registrada siguiendo tu diagrama!");
         } else {
-            System.out.println("❌ Fallo en la inserción del activo.");
+            System.out.println("❌ Error al insertar.");
         }
     }
 }
