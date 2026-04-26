@@ -1,19 +1,49 @@
 package com.fixflow.main;
 
+import com.fixflow.dao.ActivoDAO;
 import com.fixflow.dao.IncidenciaDAO;
+import com.fixflow.modelos.Activo;
 import com.fixflow.modelos.Incidencia;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        IncidenciaDAO dao = new IncidenciaDAO();
 
-        // El 0 es para el ID (se autogenera), el 1 es el ID del activo (la caldera)
-        Incidencia nueva = new Incidencia(0, "Ruido en Caldera", "Hace un soplido fuerte al arrancar", "MEDIA", 1);
+        // --- 1. SECCIÓN DE ACTIVOS ---
+        ActivoDAO activoDAO = new ActivoDAO();
+        System.out.println("===========================================");
+        System.out.println("   LISTADO DE ACTIVOS (BASE DE DATOS)      ");
+        System.out.println("===========================================");
 
-        if (dao.reportarIncidencia(nueva)) {
-            System.out.println("✅ ¡Incidencia registrada siguiendo tu diagrama!");
+        List<Activo> listaAct = activoDAO.listarActivos();
+
+        if (listaAct == null || listaAct.isEmpty()) {
+            System.out.println("⚠️ No hay activos registrados.");
         } else {
-            System.out.println("❌ Error al insertar.");
+            for (Activo a : listaAct) {
+                System.out.println("ID: " + a.getIdActivo() + " | Nombre: " + a.getNombre() + " (" + a.getUbicacion() + ")");
+            }
         }
+
+        // --- 2. SECCIÓN DE INCIDENCIAS ---
+        IncidenciaDAO incidenciaDAO = new IncidenciaDAO();
+        System.out.println("\n===========================================");
+        System.out.println("   LISTADO DE INCIDENCIAS (AVERÍAS)        ");
+        System.out.println("===========================================");
+
+        List<Incidencia> listaInc = incidenciaDAO.listarIncidencias();
+
+        if (listaInc == null || listaInc.isEmpty()) {
+            System.out.println("✅ No hay incidencias pendientes.");
+        } else {
+            for (Incidencia i : listaInc) {
+                System.out.println("ID: " + i.getIdIncidencia());
+                System.out.println("Título: " + i.getTitulo());
+                System.out.println("Prioridad: " + i.getPrioridad());
+                System.out.println("ID Activo afectado: " + i.getIdActivo());
+                System.out.println("-------------------------------------------");
+            }
+        }
+
     }
 }

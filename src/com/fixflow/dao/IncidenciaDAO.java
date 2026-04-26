@@ -4,7 +4,10 @@ import com.fixflow.database.Conexion;
 import com.fixflow.modelos.Incidencia;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class IncidenciaDAO {
 
@@ -26,5 +29,29 @@ public class IncidenciaDAO {
             System.out.println("❌ Error al reportar incidencia: " + e.getMessage());
             return false;
         }
+    }
+
+    public List<Incidencia> listarIncidencias() {
+        List<Incidencia> lista = new ArrayList<>();
+        String sql = "SELECT * FROM incidencias";
+
+        try (Connection conn = Conexion.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                Incidencia inc = new Incidencia();
+                inc.setIdIncidencia(rs.getInt("id_incidencia"));
+                inc.setTitulo(rs.getString("titulo"));
+                inc.setDescripcion(rs.getString("descripcion"));
+                inc.setPrioridad(rs.getString("prioridad"));
+                inc.setIdActivo(rs.getInt("id_activo"));
+
+                lista.add(inc);
+            }
+        } catch (SQLException e) {
+            System.out.println("❌ Error al listar incidencias: " + e.getMessage());
+        }
+        return lista;
     }
 }
