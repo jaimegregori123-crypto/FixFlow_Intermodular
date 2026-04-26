@@ -1,49 +1,32 @@
 package com.fixflow.main;
 
-import com.fixflow.dao.ActivoDAO;
-import com.fixflow.dao.IncidenciaDAO;
-import com.fixflow.modelos.Activo;
-import com.fixflow.modelos.Incidencia;
+import com.fixflow.dao.IntervencionDAO;
+import com.fixflow.modelos.Intervencion;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        // 1. Instanciamos el DAO y el Modelo
+        IntervencionDAO dao = new IntervencionDAO();
+        Intervencion repair = new Intervencion();
 
-        // --- 1. SECCIÓN DE ACTIVOS ---
-        ActivoDAO activoDAO = new ActivoDAO();
-        System.out.println("===========================================");
-        System.out.println("   LISTADO DE ACTIVOS (BASE DE DATOS)      ");
-        System.out.println("===========================================");
+        // 2. Seteamos los datos (Asegúrate de que coincidan con tus métodos)
+        repair.setIdIncidencia(1);
+        repair.setIdUsuario(1);
 
-        List<Activo> listaAct = activoDAO.listarActivos();
+        // ¡OJO AQUÍ! He puesto los nombres estándar.
+        // Si te sale rojo, borra hasta el punto y deja que IntelliJ te sugiera el nombre.
+        repair.setObservaciones("Limpieza de filtros y ajuste de presión. Todo OK.");
+        repair.setTiempo(60);
 
-        if (listaAct == null || listaAct.isEmpty()) {
-            System.out.println("⚠️ No hay activos registrados.");
+        System.out.println("Enviando intervención a la base de datos...");
+
+        // 3. Llamamos al método del DAO
+        // Si tu método en el DAO se llama 'registraIntervencion', quítale la 'r' final aquí.
+        if (dao.registraIntervencion(repair)) {
+            System.out.println("✅ ¡CONSEGUIDO! Intervención guardada.");
         } else {
-            for (Activo a : listaAct) {
-                System.out.println("ID: " + a.getIdActivo() + " | Nombre: " + a.getNombre() + " (" + a.getUbicacion() + ")");
-            }
+            System.out.println("❌ Algo ha fallado. Revisa la consola.");
         }
-
-        // --- 2. SECCIÓN DE INCIDENCIAS ---
-        IncidenciaDAO incidenciaDAO = new IncidenciaDAO();
-        System.out.println("\n===========================================");
-        System.out.println("   LISTADO DE INCIDENCIAS (AVERÍAS)        ");
-        System.out.println("===========================================");
-
-        List<Incidencia> listaInc = incidenciaDAO.listarIncidencias();
-
-        if (listaInc == null || listaInc.isEmpty()) {
-            System.out.println("✅ No hay incidencias pendientes.");
-        } else {
-            for (Incidencia i : listaInc) {
-                System.out.println("ID: " + i.getIdIncidencia());
-                System.out.println("Título: " + i.getTitulo());
-                System.out.println("Prioridad: " + i.getPrioridad());
-                System.out.println("ID Activo afectado: " + i.getIdActivo());
-                System.out.println("-------------------------------------------");
-            }
-        }
-
     }
 }

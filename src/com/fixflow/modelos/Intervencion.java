@@ -1,0 +1,62 @@
+package com.fixflow.modelos;
+
+import java.sql.Timestamp;
+
+public class Intervencion {
+    private int idIntervencion;
+    private int idIncidencia;
+    private int idUsuario;
+    private Timestamp fecha;
+    private String observaciones;
+    private int tiempo;
+
+    public Intervencion() {}
+
+    public Timestamp getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Timestamp fecha) {
+        this.fecha = fecha;
+    }
+
+    public int getIdIncidencia() {
+        return idIncidencia;
+    }
+
+    public void setIdIncidencia(int idIncidencia) {
+        this.idIncidencia = idIncidencia;
+    }
+
+    public int getIdIntervencion() {
+        return idIntervencion;
+    }
+
+    public void setIdIntervencion(int idIntervencion) {
+        this.idIntervencion = idIntervencion;
+    }
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
+    public int getTiempo() {
+        return tiempo;
+    }
+
+    public void setTiempo(int tiempo) {
+        this.tiempo = tiempo;
+    }
+}
