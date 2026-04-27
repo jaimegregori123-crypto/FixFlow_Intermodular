@@ -2,12 +2,10 @@ package com.fixflow.dao;
 
 import com.fixflow.database.Conexion;
 import com.fixflow.modelos.Activo;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.ResultSet;
 
 public class ActivoDAO {
 
@@ -34,26 +32,27 @@ public class ActivoDAO {
 
     public List<Activo> listarActivos() {
         List<Activo> lista = new ArrayList<>();
-        String sql = "SELECT * FROM activos";
+        String sql = "SELECT id_activo, nombre, ubicacion, estado_operativo FROM activos";
 
-        try (Connection connection = Conexion.obtenerConexion();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet rs = preparedStatement.executeQuery()) {
+        try (Connection conn = Conexion.obtenerConexion();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                Activo activo = new Activo();
-                activo.setIdActivo(rs.getInt("id_activo"));
-                activo.setNombre(rs.getString("nombre"));
-                // He quitado la línea de setTipo para que no de error
-                activo.setUbicacion(rs.getString("ubicacion"));
-                activo.setEstadoOperativo(rs.getString("estado_operativo"));
+                Activo a = new Activo();
+                // Mapeamos del SQL a tus setters de Java
+                a.setIdActivo(rs.getInt("id_activo"));
+                a.setNombre(rs.getString("nombre"));
+                a.setUbicacion(rs.getString("ubicacion"));
+                // Asegúrate de tener un setEstadoOperativo en tu clase Activo
+                a.setEstadoOperativo(rs.getString("estado_operativo"));
 
-                lista.add(activo);
+                lista.add(a);
             }
-
         } catch (SQLException e) {
             System.out.println("❌ Error al listar activos: " + e.getMessage());
         }
         return lista;
     }
+
 }

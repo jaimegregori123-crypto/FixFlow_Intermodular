@@ -6,15 +6,22 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class App extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        // La barra "/" es clave: busca en la raíz de la carpeta naranja 'resources'
-        Parent root = FXMLLoader.load(getClass().getResource("/MainView.fxml"));
-        primaryStage.setTitle("FixFlow - Sistema de Gestión");
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+    public void start(Stage stage) throws IOException {
+        // 1. Cargamos el archivo FXML (asegúrate de que el nombre coincide: vista.fxml)
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/vista.fxml"));
+
+        // 2. Creamos la escena con el diseño cargado
+        Scene scene = new Scene(fxmlLoader.load(), 800, 600); // Aquí puedes poner el tamaño que quieras
+
+        // 3. Configuramos y mostramos la ventana
+        stage.setTitle("FixFlow - Gestión de Activos");
+        stage.setScene(scene);
+        stage.show();
     }
 
     public static void main(String[] args) {

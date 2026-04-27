@@ -2,10 +2,8 @@ package com.fixflow.dao;
 
 import com.fixflow.database.Conexion;
 import com.fixflow.modelos.Incidencia;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,25 +31,21 @@ public class IncidenciaDAO {
 
     public List<Incidencia> listarIncidencias() {
         List<Incidencia> lista = new ArrayList<>();
-        String sql = "SELECT * FROM incidencias";
-
+        String sql = "SELECT id_incidencia, titulo, descripcion, prioridad, fecha_creacion, id_activo FROM incidencias";
         try (Connection conn = Conexion.obtenerConexion();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
-
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                Incidencia inc = new Incidencia();
-                inc.setIdIncidencia(rs.getInt("id_incidencia"));
-                inc.setTitulo(rs.getString("titulo"));
-                inc.setDescripcion(rs.getString("descripcion"));
-                inc.setPrioridad(rs.getString("prioridad"));
-                inc.setIdActivo(rs.getInt("id_activo"));
-
-                lista.add(inc);
+                Incidencia i = new Incidencia();
+                i.setIdIncidencia(rs.getInt("id_incidencia"));
+                i.setTitulo(rs.getString("titulo"));
+                i.setDescripcion(rs.getString("descripcion"));
+                i.setPrioridad(rs.getString("prioridad"));
+                // En tu clase no veo el atributo fecha, si no lo tienes, omite esta línea o añádelo
+                i.setIdActivo(rs.getInt("id_activo"));
+                lista.add(i);
             }
-        } catch (SQLException e) {
-            System.out.println("❌ Error al listar incidencias: " + e.getMessage());
-        }
+        } catch (SQLException e) { e.printStackTrace(); }
         return lista;
     }
 }
