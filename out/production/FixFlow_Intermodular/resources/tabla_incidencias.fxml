@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER_NAME">
+<AnchorPane prefHeight="405.0" prefWidth="603.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER_NAME">
    <children>
       <TableView fx:id="tablaIncidenciasView" layoutX="63.0" layoutY="81.0" prefHeight="209.0" prefWidth="501.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columns>
@@ -20,5 +25,21 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
+      <VBox alignment="BOTTOM_CENTER" layoutY="-13.6" prefHeight="419.0" prefWidth="613.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-14.0">
+         <children>
+            <HBox prefHeight="72.0" prefWidth="602.0" spacing="10.0">
+               <children>
+                  <TextField fx:id="txtIncidenciaTitulo" />
+                  <TextField fx:id="txtIncidenciaDesc" />
+                  <ComboBox fx:id="comboPrioridad" prefWidth="150.0" />
+                  <TextField fx:id="txtIncidenciaActivo" />
+               </children>
+               <padding>
+                  <Insets left="8.0" right="8.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+      <Button fx:id="btnAgregarIncidencia" layoutX="270.0" layoutY="394.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="67.0" text="Button" AnchorPane.bottomAnchor="8.0" />
    </children>
 </AnchorPane>

@@ -41,11 +41,32 @@ public class IncidenciaDAO {
                 i.setTitulo(rs.getString("titulo"));
                 i.setDescripcion(rs.getString("descripcion"));
                 i.setPrioridad(rs.getString("prioridad"));
-                // En tu clase no veo el atributo fecha, si no lo tienes, omite esta línea o añádelo
                 i.setIdActivo(rs.getInt("id_activo"));
                 lista.add(i);
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return lista;
+    }
+
+    public boolean insertarIncidencia(Incidencia i) {
+        // 1. Consulta SQL (ajusta los nombres de las columnas a tu DB)
+        // Usamos CURRENT_DATE para la columna 'fecha' que tienes en tu tabla
+        String sql = "INSERT INTO incidencias (titulo, descripcion, prioridad, fecha_creacion, id_activo) VALUES (?, ?, ?, CURRENT_DATE, ?)";
+
+        try (Connection conn = Conexion.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, i.getTitulo());
+            pstmt.setString(2, i.getDescripcion());
+            pstmt.setString(3, i.getPrioridad());
+            pstmt.setInt(4, i.getIdActivo());
+
+            int filasAfectadas = pstmt.executeUpdate();
+            return filasAfectadas > 0;
+
+        } catch (SQLException e) {
+            System.out.println("❌ Error al insertar incidencia: " + e.getMessage());
+            return false;
+        }
     }
 }
