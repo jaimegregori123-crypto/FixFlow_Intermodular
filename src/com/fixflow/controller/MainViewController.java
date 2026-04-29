@@ -59,7 +59,7 @@ public class MainViewController {
 
         // 1. Conectamos los campos de texto del formulario (usa los fx:id que pusimos en Scene Builder)
         txtUserNombre = (TextField) vista.lookup("#txtUserNombre");
-        txtUserRol = (TextField) vista.lookup("#txtUserRol");
+        txtUserRol = (ComboBox<String>) vista.lookup("#txtUserRol");
         txtUserPassword = (PasswordField) vista.lookup("#txtUserPassword");
         btnAgregarUsuario = (Button) vista.lookup("#btnAgregarUsuario");
 
@@ -69,6 +69,11 @@ public class MainViewController {
             System.out.println("✅ Botón de usuarios vinculado.");
         }
 
+        // Añade esto justo después de los lookups para que aparezcan las palabras:
+        if (txtUserRol != null) {
+            txtUserRol.getItems().setAll("Administrador", "Técnico");
+            txtUserRol.setValue("Técnico");
+        }
         // 3. Buscamos y configuramos la tabla
         TableView<Usuario> tabla = (TableView<Usuario>) vista.lookup("#tablaUsuariosView");
         if (tabla != null) {
@@ -197,7 +202,10 @@ public class MainViewController {
             tabla.setItems(FXCollections.observableArrayList(intervencionDAO.obtenerIntervenciones()));
             System.out.println("📊 Datos de intervenciones cargados.");
         }
+
     }
+
+
 
     private void onAgregarIntervencionClick() {
         try {
@@ -227,6 +235,8 @@ public class MainViewController {
             System.out.println("❌ Error inesperado: " + e.getMessage());
         }
     }
+
+
 
     @FXML private void onUsuariosClick() { cargarVista("tabla_usuarios.fxml"); }
     @FXML private void onActivosClick() { cargarVista("tabla_activos.fxml"); }
@@ -269,7 +279,7 @@ public class MainViewController {
     @FXML
     private void onAgregarUsuarioClick() {
         String nombre = txtUserNombre.getText();
-        String rol = txtUserRol.getText();
+        String rol = (txtUserRol.getValue() != null) ? txtUserRol.getValue().toString() : "";
         String pass = txtUserPassword.getText();
 
         if (nombre.isEmpty() || rol.isEmpty() || pass.isEmpty()) {
@@ -285,7 +295,7 @@ public class MainViewController {
         if (usuarioDAO.insertarUsuario(u)) {
             System.out.println("✅ Usuario guardado");
             txtUserNombre.clear();
-            txtUserRol.clear();
+            txtUserRol.getSelectionModel().clearSelection();
             txtUserPassword.clear();
             onUsuariosClick(); // Refresca la tabla
         }
@@ -322,7 +332,7 @@ public class MainViewController {
     @FXML private TextField txtEstado;
 
     @FXML private TextField txtUserNombre;
-    @FXML private TextField txtUserRol;
+    @FXML private ComboBox<String> txtUserRol;
     @FXML private PasswordField txtUserPassword;
     @FXML private Button btnAgregarUsuario;
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -23,7 +24,7 @@
             <HBox alignment="CENTER" prefHeight="58.0" prefWidth="582.0" spacing="10.0">
                <children>
                   <TextField fx:id="txtUserNombre" />
-                  <TextField fx:id="txtUserRol" />
+                  <ComboBox fx:id="txtUserRol" prefWidth="150.0" />
                   <PasswordField fx:id="txtUserPassword" promptText="Contraseña" />
                   <Button fx:id="btnAgregarUsuario" mnemonicParsing="false" text="Button" />
                </children>

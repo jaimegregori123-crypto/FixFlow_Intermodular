@@ -12,14 +12,21 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        // 1. Cargamos el archivo FXML (asegúrate de que el nombre coincide: vista.fxml)
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/vista.fxml"));
+        // 1. Cargamos el diseño
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
+        Parent root = fxmlLoader.load();
 
-        // 2. Creamos la escena con el diseño cargado
-        Scene scene = new Scene(fxmlLoader.load(), 800, 600); // Aquí puedes poner el tamaño que quieras
+        // 2. Creamos la escena SIN dimensiones fijas
+        // Al no poner números, Java intentará usar el tamaño que definiste en Scene Builder
+        Scene scene = new Scene(root);
 
-        // 3. Configuramos y mostramos la ventana
-        stage.setTitle("FixFlow - Gestión de Activos");
+        // 3. Configuramos la ventana (Stage)
+        stage.setTitle("FixFlow - Gestión de Activos e Incidencias");
+
+        // --- AQUÍ LA MAGIA ---
+        stage.setMaximized(true); // Se abre ocupando toda la pantalla
+        // ---------------------
+
         stage.setScene(scene);
         stage.show();
     }

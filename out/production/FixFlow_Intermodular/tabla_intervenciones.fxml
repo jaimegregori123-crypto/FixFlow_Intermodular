@@ -23,9 +23,9 @@
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
             </columnResizePolicy>
         </TableView>
-      <VBox alignment="BOTTOM_CENTER" layoutX="228.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="BOTTOM_CENTER" layoutX="-193.6" layoutY="-176.0" prefHeight="712.0" prefWidth="974.0" AnchorPane.bottomAnchor="-136.0" AnchorPane.leftAnchor="-194.0" AnchorPane.rightAnchor="-180.0" AnchorPane.topAnchor="-176.0">
          <children>
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
                   <TextField fx:id="txtIntervencionDesc">
                      <HBox.margin>
