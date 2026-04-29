@@ -1,23 +1,27 @@
 package com.fixflow.modelos;
 
+import java.sql.Date; // IMPORTANTE: Importar la fecha de SQL
+
 public class Incidencia {
     private int idIncidencia;
     private String titulo;
     private String descripcion;
     private String prioridad;
     private int idActivo;
+    private Date fecha; // <--- NUEVA VARIABLE
 
     public Incidencia() {}
 
-    public Incidencia(int idIncidencia, String titulo, String descripcion, String prioridad, int idActivo) {
+    public Incidencia(int idIncidencia, String titulo, String descripcion, String prioridad, int idActivo, Date fecha) {
         this.idIncidencia = idIncidencia;
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.prioridad = prioridad;
         this.idActivo = idActivo;
+        this.fecha = fecha; // <--- AÑADIDO AL CONSTRUCTOR
     }
 
-    // GETTERS Y SETTERS (Solo los que existen en tu SQL)
+    // GETTERS Y SETTERS
     public int getIdIncidencia() { return idIncidencia; }
     public void setIdIncidencia(int idIncidencia) { this.idIncidencia = idIncidencia; }
 
@@ -32,4 +36,7 @@ public class Incidencia {
 
     public int getIdActivo() { return idActivo; }
     public void setIdActivo(int idActivo) { this.idActivo = idActivo; }
+
+    public Date getFecha() { return fecha; }
+    public void setFecha(Date fecha) { this.fecha = fecha; }
 }

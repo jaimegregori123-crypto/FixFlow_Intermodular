@@ -4,17 +4,21 @@ import com.fixflow.dao.IncidenciaDAO;
 import com.fixflow.dao.IntervencionDAO;
 import com.fixflow.dao.UsuarioDAO;
 import com.fixflow.dao.ActivoDAO; // Asegúrate de importar esto
-import com.fixflow.modelos.Incidencia;
-import com.fixflow.modelos.Intervencion;
-import com.fixflow.modelos.Usuario;
-import com.fixflow.modelos.Activo;  // Y esto
+import com.fixflow.modelos.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import java.sql.Date;
+import java.time.LocalDate;
+
+import java.io.IOException;
 import java.util.List;
 
 public class MainViewController {
@@ -126,52 +130,43 @@ public class MainViewController {
     private void configurarTablaIncidencias(Node vista) {
         System.out.println("🔍 Configurando módulo de incidencias...");
 
-        // 1. Vinculamos los nuevos campos del formulario (Lookups)
+        // Mantenemos tus lookups tal cual los tienes
         txtIncidenciaTitulo = (TextField) vista.lookup("#txtIncidenciaTitulo");
         txtIncidenciaDesc = (TextField) vista.lookup("#txtIncidenciaDesc");
         txtIncidenciaActivo = (TextField) vista.lookup("#txtIncidenciaActivo");
         comboPrioridad = (ComboBox<String>) vista.lookup("#comboPrioridad");
         btnAgregarIncidencia = (Button) vista.lookup("#btnAgregarIncidencia");
 
-        // 2. Rellenamos el ComboBox de Prioridad
-        if (comboPrioridad != null) {
-            comboPrioridad.getItems().setAll("Baja", "Media", "Alta", "Crítica");
-            comboPrioridad.setPromptText("✅ ComboBox de prioridad rellenado");
-        } else {
-            System.out.println("❌ ERROR: No se encuentra el ComboBox #comboPrioridad");
-        }
-
-        // 3. Conectamos el botón de agregar
+        // Vinculación del botón (la dejamos como la tenías si te funcionaba)
         if (btnAgregarIncidencia != null) {
             btnAgregarIncidencia.setOnAction(event -> onAgregarIncidenciaClick());
         }
 
-        // 4. Buscamos y configuramos la tabla
+        // 2. Rellenamos el ComboBox de Prioridad
+        if (comboPrioridad != null) {
+            // Si esta línea falta o el nombre del combo no coincide con el FXML, sale vacío
+            comboPrioridad.getItems().setAll("Baja", "Media", "Alta", "Crítica");
+        }
+
+        // Configuración de la tabla
         Node componente = vista.lookup("#tablaIncidenciasView");
         if (componente instanceof TableView) {
             @SuppressWarnings("unchecked")
             TableView<Incidencia> tabla = (TableView<Incidencia>) componente;
 
-            // Vinculamos columnas (Asegúrate que coincidan con los nombres en tu clase Incidencia)
+            // Vinculación de columnas
             tabla.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("idIncidencia"));
             tabla.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("titulo"));
             tabla.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("descripcion"));
             tabla.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("prioridad"));
-
-            // Columna 4 es Fecha. Si en tu clase Java se llama "fecha", descomenta la línea de abajo:
-            // tabla.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("fecha"));
-
+            tabla.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("fecha"));
             tabla.getColumns().get(5).setCellValueFactory(new PropertyValueFactory<>("idActivo"));
 
             // Carga de datos
             List<Incidencia> lista = incidenciaDAO.listarIncidencias();
-            System.out.println("📊 DEBUG: El DAO ha devuelto " + (lista != null ? lista.size() : "NULL") + " incidencias.");
-
             if (lista != null) {
                 tabla.setItems(FXCollections.observableArrayList(lista));
             }
-        } else {
-            System.out.println("❌ ERROR: No se encontró #tablaIncidenciasView");
         }
     }
 
@@ -254,7 +249,6 @@ public class MainViewController {
     private void onAgregarActivoClick() {
         System.out.println("🚀 Botón pulsado, procesando guardado...");
 
-        // Recoger datos
         String nom = txtNombre.getText();
         String ubi = txtUbicacion.getText();
         String est = txtEstado.getText();
@@ -313,17 +307,61 @@ public class MainViewController {
             return;
         }
 
-        Incidencia i = new Incidencia();
-        i.setTitulo(titulo);
-        i.setDescripcion(desc);
-        i.setPrioridad(prio);
-        i.setIdActivo(Integer.parseInt(idAct));
-        // La fecha la puedes gestionar en el DAO con un "CURRENT_DATE" en SQL
-        // o poner i.setFecha(new Date()) si usas java.util.Date
+        try {
+            Incidencia i = new Incidencia();
+            i.setTitulo(titulo);
+            i.setDescripcion(desc);
+            i.setPrioridad(prio);
+            i.setIdActivo(Integer.parseInt(idAct));
 
-        if (incidenciaDAO.insertarIncidencia(i)) {
-            System.out.println("✅ Incidencia '" + titulo + "' creada.");
-            onIncidenciasClick(); // Refrescar la tabla
+            // --- NUEVO: FECHA AUTOMÁTICA ---
+            // Usamos la fecha actual del sistema
+            i.setFecha(java.sql.Date.valueOf(java.time.LocalDate.now()));
+            // -------------------------------
+
+            if (incidenciaDAO.insertarIncidencia(i)) {
+                System.out.println("✅ Incidencia '" + titulo + "' creada con fecha: " + i.getFecha());
+
+                // Limpiamos los campos después de guardar
+                txtIncidenciaTitulo.clear();
+                txtIncidenciaDesc.clear();
+                txtIncidenciaActivo.clear();
+                comboPrioridad.getSelectionModel().clearSelection();
+
+                onIncidenciasClick(); // Refrescar la tabla
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("⚠️ El ID del activo debe ser un número.");
+        }
+    }
+
+    @FXML
+    private void onCerrarSesionClick() {
+        try {
+            Sesion.nombreUsuario = null;
+            Sesion.rolUsuario = null;
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/login.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) btnCerrarSesion.getScene().getWindow();
+
+            // 1. Cargamos la escena
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+
+            // 2. TRUCO PARA FORZAR: Quitamos y ponemos el maximizado
+            // Esto obliga a Windows/OS a redibujar la ventana totalmente
+            stage.setMaximized(false);
+            stage.setResizable(true);
+            stage.setMaximized(true);
+
+            stage.show();
+
+            System.out.println("🚪 Sesión cerrada y ventana forzada a pantalla completa.");
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -343,4 +381,6 @@ public class MainViewController {
     // Variables para Intervenciones
     @FXML private TextField txtIntervencionDesc, txtIntervencionIncidencia, txtIntervencionUsuario;
     @FXML private Button btnAgregarIntervencion;
+
+    @FXML private Button btnCerrarSesion;
 }

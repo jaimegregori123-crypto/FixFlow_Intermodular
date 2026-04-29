@@ -19,13 +19,18 @@
          <left>
             <VBox alignment="TOP_CENTER" spacing="15.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onActivosClick" text="Activos" />
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onUsuariosClick" text="Usuarios" />
+                  <Button fx:id="btnMenuActivos" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onActivosClick" text="Activos" />
+                  <Button fx:id="btnMenuUsuarios" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onUsuariosClick" text="Usuarios" />
                   <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onIncidenciasClick" text="Incidencias" />
-                  <Button mnemonicParsing="false" onAction="#onIntervencionesClick" prefHeight="27.0" prefWidth="86.0" text="Intervenciones" />
+                  <Button mnemonicParsing="false" onAction="#onIntervencionesClick" prefHeight="27.0" prefWidth="95.0" text="Intervenciones" />
+                  <Button fx:id="btnCerrarSesion" layoutX="20.0" layoutY="132.0" mnemonicParsing="false" onAction="#onCerrarSesionClick" prefHeight="27.0" prefWidth="95.0" text="Cerrar Sesion">
+                     <VBox.margin>
+                        <Insets top="40.0" />
+                     </VBox.margin>
+                  </Button>
                </children>
                <padding>
-                  <Insets left="10.0" right="10.0" />
+                  <Insets left="15.0" right="15.0" />
                </padding>
             </VBox>
          </left>

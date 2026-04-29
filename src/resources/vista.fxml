@@ -23,7 +23,11 @@
                   <Button fx:id="btnMenuUsuarios" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onUsuariosClick" text="Usuarios" />
                   <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onIncidenciasClick" text="Incidencias" />
                   <Button mnemonicParsing="false" onAction="#onIntervencionesClick" prefHeight="27.0" prefWidth="95.0" text="Intervenciones" />
-                  <Button layoutX="20.0" layoutY="132.0" mnemonicParsing="false" onAction="#onIntervencionesClick" prefHeight="27.0" prefWidth="95.0" text="Cerrar Sesion" />
+                  <Button fx:id="btnCerrarSesion" layoutX="20.0" layoutY="132.0" mnemonicParsing="false" onAction="#onCerrarSesionClick" prefHeight="27.0" prefWidth="95.0" text="Cerrar Sesion">
+                     <VBox.margin>
+                        <Insets top="40.0" />
+                     </VBox.margin>
+                  </Button>
                </children>
                <padding>
                   <Insets left="15.0" right="15.0" />
