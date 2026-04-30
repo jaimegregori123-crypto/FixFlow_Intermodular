@@ -3,7 +3,8 @@ package com.fixflow.controller;
 import com.fixflow.dao.IncidenciaDAO;
 import com.fixflow.dao.IntervencionDAO;
 import com.fixflow.dao.UsuarioDAO;
-import com.fixflow.dao.ActivoDAO; // Asegúrate de importar esto
+import com.fixflow.dao.ActivoDAO;
+import com.fixflow.main.MainView.App;
 import com.fixflow.modelos.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -17,6 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import java.sql.Date;
 import java.time.LocalDate;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,17 +29,30 @@ public class MainViewController {
     private BorderPane rootPane;
 
     private UsuarioDAO usuarioDAO = new UsuarioDAO();
-    private ActivoDAO activoDAO = new ActivoDAO(); // Instanciado
+    private ActivoDAO activoDAO = new ActivoDAO();
     private IncidenciaDAO incidenciaDAO = new IncidenciaDAO();
     private IntervencionDAO intervencionDAO = new IntervencionDAO();
 
     private void cargarVista(String archivoFxml) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + archivoFxml));
-            Node vista = loader.load();
+            Parent vista = loader.load();
+
+            // Inyectamos el CSS global antes de añadir al BorderPane
+            if (App.CSS_GLOBAL != null) {
+                vista.getStylesheets().add(App.CSS_GLOBAL);
+            }
+
+            // Forzar que la vista ocupe todo el espacio disponible del BorderPane
+            if (vista instanceof VBox) {
+                VBox vbox = (VBox) vista;
+                vbox.setMaxWidth(Double.MAX_VALUE);
+                vbox.setMaxHeight(Double.MAX_VALUE);
+                BorderPane.setAlignment(vbox, javafx.geometry.Pos.TOP_LEFT);
+            }
+
             rootPane.setCenter(vista);
 
-            // Organizamos por archivo cargado
             switch (archivoFxml) {
                 case "tabla_usuarios.fxml":
                     configurarTablaUsuarios(vista);
@@ -45,7 +60,6 @@ public class MainViewController {
                 case "tabla_activos.fxml":
                     configurarTablaActivos(vista);
                     break;
-                // ESTO ES LO QUE TE FALTA:
                 case "tabla_incidencias.fxml":
                     configurarTablaIncidencias(vista);
                     break;
@@ -61,32 +75,26 @@ public class MainViewController {
     private void configurarTablaUsuarios(Node vista) {
         System.out.println("DEBUG: Configurando tabla de usuarios y conectando formulario...");
 
-        // 1. Conectamos los campos de texto del formulario (usa los fx:id que pusimos en Scene Builder)
         txtUserNombre = (TextField) vista.lookup("#txtUserNombre");
         txtUserRol = (ComboBox<String>) vista.lookup("#txtUserRol");
         txtUserPassword = (PasswordField) vista.lookup("#txtUserPassword");
         btnAgregarUsuario = (Button) vista.lookup("#btnAgregarUsuario");
 
-        // 2. Conectamos el botón manualmente para evitar errores de FXML
         if (btnAgregarUsuario != null) {
             btnAgregarUsuario.setOnAction(event -> onAgregarUsuarioClick());
             System.out.println("✅ Botón de usuarios vinculado.");
         }
 
-        // Añade esto justo después de los lookups para que aparezcan las palabras:
         if (txtUserRol != null) {
             txtUserRol.getItems().setAll("Administrador", "Técnico");
             txtUserRol.setValue("Técnico");
         }
-        // 3. Buscamos y configuramos la tabla
+
         TableView<Usuario> tabla = (TableView<Usuario>) vista.lookup("#tablaUsuariosView");
         if (tabla != null) {
-            // Vinculamos columnas (Asegúrate que en Usuario.java se llamen id, nombre y rol)
             tabla.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("id"));
             tabla.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("nombre"));
             tabla.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("rol"));
-
-            // Cargamos los datos
             tabla.setItems(FXCollections.observableArrayList(usuarioDAO.listarUsuarios()));
             System.out.println("✅ Tabla de usuarios cargada con éxito.");
         } else {
@@ -97,12 +105,10 @@ public class MainViewController {
     private void configurarTablaActivos(Node vista) {
         System.out.println("DEBUG: Configurando tabla y conectando botón manualmente...");
 
-        // 1. Lookups de los campos de texto
         txtNombre = (TextField) vista.lookup("#txtNombre");
         txtUbicacion = (TextField) vista.lookup("#txtUbicacion");
         txtEstado = (TextField) vista.lookup("#txtEstado");
 
-        // 2. NUEVO: Conexión manual del botón
         Button btnAgregar = (Button) vista.lookup("#btnAgregarActivo");
         if (btnAgregar != null) {
             btnAgregar.setOnAction(event -> onAgregarActivoClick());
@@ -111,7 +117,6 @@ public class MainViewController {
             System.out.println("❌ No se encontró el botón con ID #btnAgregarActivo");
         }
 
-        // 3. Configuración de la tabla (lo que ya tenías)
         Node componente = vista.lookup("#tablaActivosView");
         if (componente instanceof TableView) {
             @SuppressWarnings("unchecked")
@@ -130,31 +135,25 @@ public class MainViewController {
     private void configurarTablaIncidencias(Node vista) {
         System.out.println("🔍 Configurando módulo de incidencias...");
 
-        // Mantenemos tus lookups tal cual los tienes
         txtIncidenciaTitulo = (TextField) vista.lookup("#txtIncidenciaTitulo");
         txtIncidenciaDesc = (TextField) vista.lookup("#txtIncidenciaDesc");
         txtIncidenciaActivo = (TextField) vista.lookup("#txtIncidenciaActivo");
         comboPrioridad = (ComboBox<String>) vista.lookup("#comboPrioridad");
         btnAgregarIncidencia = (Button) vista.lookup("#btnAgregarIncidencia");
 
-        // Vinculación del botón (la dejamos como la tenías si te funcionaba)
         if (btnAgregarIncidencia != null) {
             btnAgregarIncidencia.setOnAction(event -> onAgregarIncidenciaClick());
         }
 
-        // 2. Rellenamos el ComboBox de Prioridad
         if (comboPrioridad != null) {
-            // Si esta línea falta o el nombre del combo no coincide con el FXML, sale vacío
             comboPrioridad.getItems().setAll("Baja", "Media", "Alta", "Crítica");
         }
 
-        // Configuración de la tabla
         Node componente = vista.lookup("#tablaIncidenciasView");
         if (componente instanceof TableView) {
             @SuppressWarnings("unchecked")
             TableView<Incidencia> tabla = (TableView<Incidencia>) componente;
 
-            // Vinculación de columnas
             tabla.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("idIncidencia"));
             tabla.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("titulo"));
             tabla.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("descripcion"));
@@ -162,7 +161,6 @@ public class MainViewController {
             tabla.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("fecha"));
             tabla.getColumns().get(5).setCellValueFactory(new PropertyValueFactory<>("idActivo"));
 
-            // Carga de datos
             List<Incidencia> lista = incidenciaDAO.listarIncidencias();
             if (lista != null) {
                 tabla.setItems(FXCollections.observableArrayList(lista));
@@ -171,56 +169,42 @@ public class MainViewController {
     }
 
     private void configurarTablaIntervenciones(Node vista) {
-        // 1. Enlazamos los componentes del FXML (IDs de Scene Builder)
         txtIntervencionDesc = (TextField) vista.lookup("#txtIntervencionDesc");
         txtIntervencionIncidencia = (TextField) vista.lookup("#txtIntervencionIncidencia");
         txtIntervencionUsuario = (TextField) vista.lookup("#txtIntervencionUsuario");
         btnAgregarIntervencion = (Button) vista.lookup("#btnAgregarIntervencion");
 
-        // 2. Asignamos la acción al botón por código (sin usar On Action en Scene Builder)
         if (btnAgregarIntervencion != null) {
             btnAgregarIntervencion.setOnAction(event -> onAgregarIntervencionClick());
         }
 
-        // 3. Configuramos la TableView
         TableView<Intervencion> tabla = (TableView<Intervencion>) vista.lookup("#tablaIntervencionesView");
         if (tabla != null) {
-            // Vinculamos cada columna con las variables de tu clase Intervencion.java
-            // IMPORTANTE: Los nombres entre comillas deben ser EXACTOS a tus variables en el modelo
             tabla.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("idIntervencion"));
             tabla.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("observaciones"));
             tabla.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("fecha"));
             tabla.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("idIncidencia"));
             tabla.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("idUsuario"));
 
-            // Cargamos los datos usando el método de tu DAO
             tabla.setItems(FXCollections.observableArrayList(intervencionDAO.obtenerIntervenciones()));
             System.out.println("📊 Datos de intervenciones cargados.");
         }
-
     }
-
-
 
     private void onAgregarIntervencionClick() {
         try {
-            // Creamos el objeto con los datos de los cuadros de texto
             Intervencion nuevaInter = new Intervencion();
             nuevaInter.setObservaciones(txtIntervencionDesc.getText());
             nuevaInter.setIdIncidencia(Integer.parseInt(txtIntervencionIncidencia.getText()));
             nuevaInter.setIdUsuario(Integer.parseInt(txtIntervencionUsuario.getText()));
 
-            // Validamos que la descripción no esté vacía
             if (nuevaInter.getObservaciones().isEmpty()) {
                 System.out.println("⚠️ Escribe una descripción técnica.");
                 return;
             }
 
-            // Llamamos al DAO para guardar en la base de datos
             if (intervencionDAO.registraIntervencion(nuevaInter)) {
                 System.out.println("✅ Intervención guardada con éxito.");
-
-                // Refrescamos la pestaña actual para que aparezca la nueva fila
                 onIntervencionesClick();
             }
 
@@ -231,15 +215,18 @@ public class MainViewController {
         }
     }
 
+    @FXML
+    private TableView<Incidencia> tablaIncidenciasView;
 
+    @FXML private void onUsuariosClick()     { cargarVista("tabla_usuarios.fxml"); }
+    @FXML private void onActivosClick()      { cargarVista("tabla_activos.fxml"); }
 
-    @FXML private void onUsuariosClick() { cargarVista("tabla_usuarios.fxml"); }
-    @FXML private void onActivosClick() { cargarVista("tabla_activos.fxml"); }
     @FXML
     private void onIncidenciasClick() {
-        System.out.println("DEBUG: Pulsado botón Incidencias"); // Para confirmar que funciona
+        System.out.println("DEBUG: Pulsado botón Incidencias");
         cargarVista("tabla_incidencias.fxml");
     }
+
     @FXML
     private void onIntervencionesClick() {
         cargarVista("tabla_intervenciones.fxml");
@@ -265,7 +252,6 @@ public class MainViewController {
 
         if (activoDAO.insertarActivo(a)) {
             System.out.println("✅ Guardado con éxito en MySQL");
-            // Refrescar la vista actual para ver el cambio
             onActivosClick();
         }
     }
@@ -291,7 +277,7 @@ public class MainViewController {
             txtUserNombre.clear();
             txtUserRol.getSelectionModel().clearSelection();
             txtUserPassword.clear();
-            onUsuariosClick(); // Refresca la tabla
+            onUsuariosClick();
         }
     }
 
@@ -313,22 +299,15 @@ public class MainViewController {
             i.setDescripcion(desc);
             i.setPrioridad(prio);
             i.setIdActivo(Integer.parseInt(idAct));
-
-            // --- NUEVO: FECHA AUTOMÁTICA ---
-            // Usamos la fecha actual del sistema
-            i.setFecha(java.sql.Date.valueOf(java.time.LocalDate.now()));
-            // -------------------------------
+            i.setFecha(Date.valueOf(LocalDate.now()));
 
             if (incidenciaDAO.insertarIncidencia(i)) {
                 System.out.println("✅ Incidencia '" + titulo + "' creada con fecha: " + i.getFecha());
-
-                // Limpiamos los campos después de guardar
                 txtIncidenciaTitulo.clear();
                 txtIncidenciaDesc.clear();
                 txtIncidenciaActivo.clear();
                 comboPrioridad.getSelectionModel().clearSelection();
-
-                onIncidenciasClick(); // Refrescar la tabla
+                onIncidenciasClick();
             }
         } catch (NumberFormatException e) {
             System.out.println("⚠️ El ID del activo debe ser un número.");
@@ -346,16 +325,17 @@ public class MainViewController {
 
             Stage stage = (Stage) btnCerrarSesion.getScene().getWindow();
 
-            // 1. Cargamos la escena
             Scene scene = new Scene(root);
-            stage.setScene(scene);
 
-            // 2. TRUCO PARA FORZAR: Quitamos y ponemos el maximizado
-            // Esto obliga a Windows/OS a redibujar la ventana totalmente
+            // Reaplicamos el CSS global al volver al login
+            if (App.CSS_GLOBAL != null) {
+                scene.getStylesheets().add(App.CSS_GLOBAL);
+            }
+
+            stage.setScene(scene);
             stage.setMaximized(false);
             stage.setResizable(true);
             stage.setMaximized(true);
-
             stage.show();
 
             System.out.println("🚪 Sesión cerrada y ventana forzada a pantalla completa.");
@@ -363,6 +343,28 @@ public class MainViewController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void aplicarPermisos() {
+        String rol = Sesion.rolUsuario;
+        System.out.println("🔐 Rol detectado: " + rol);
+
+        if (rol != null && rol.equalsIgnoreCase("técnico")) {
+            Node btnUsuarios = rootPane.lookup("#btnMenuUsuarios");
+
+            if (btnUsuarios != null) {
+                btnUsuarios.setVisible(false);
+                btnUsuarios.setManaged(false);
+                System.out.println("🚫 Botón de Usuarios ocultado correctamente.");
+            } else {
+                System.out.println("⚠️ No se pudo encontrar el botón #btnMenuUsuarios para ocultarlo.");
+            }
+        }
+    }
+
+    @FXML
+    public void initialize() {
+        aplicarPermisos();
     }
 
     @FXML private TextField txtNombre;
@@ -378,7 +380,6 @@ public class MainViewController {
     @FXML private ComboBox<String> comboPrioridad;
     @FXML private Button btnAgregarIncidencia;
 
-    // Variables para Intervenciones
     @FXML private TextField txtIntervencionDesc, txtIntervencionIncidencia, txtIntervencionUsuario;
     @FXML private Button btnAgregarIntervencion;
 

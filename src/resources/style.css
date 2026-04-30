@@ -1,0 +1,338 @@
+/* =============================================
+   FIXFLOW - DARK THEME
+   ============================================= */
+
+/* === FONDO GENERAL === */
+.root {
+    -fx-background-color: #1a1a2e;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 13px;
+}
+
+/* === FORZAR FONDO OSCURO EN TODOS LOS CONTENEDORES === */
+AnchorPane, .anchor-pane,
+BorderPane, .border-pane,
+VBox, .vbox,
+HBox, .hbox,
+Pane, .pane {
+    -fx-background-color: #1a1a2e;
+}
+
+/* =============================================
+   LOGIN
+   ============================================= */
+.root > .vbox {
+    -fx-background-color: #16213e;
+    -fx-border-color: #0f3460;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 40 50;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 20, 0, 0, 4);
+    -fx-max-width: 380;
+    -fx-max-height: 340;
+}
+
+.root > .vbox > .label {
+    -fx-text-fill: #e94560;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10 0;
+}
+
+.root > .vbox > .vbox {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.root > .vbox > .vbox > .label {
+    -fx-text-fill: #a8b2d8;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 0 2 0;
+}
+
+#btnLogin {
+    -fx-background-color: #e94560;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-padding: 10 30;
+    -fx-cursor: hand;
+    -fx-pref-width: 160px;
+}
+
+#btnLogin:hover {
+    -fx-background-color: #c73652;
+}
+
+#btnLogin:pressed {
+    -fx-background-color: #a02d44;
+}
+
+/* =============================================
+   LOGO SIDEBAR
+   ============================================= */
+.sidebar-logo {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-padding: 0;
+    -fx-effect: dropshadow(gaussian, rgba(233,69,96,0.8), 12, 0.4, 0, 0);
+    -fx-text-fill: #e94560;
+}
+
+.separator {
+    -fx-background-color: #0f3460;
+    -fx-padding: 0 10;
+}
+
+/* =============================================
+   SIDEBAR
+   ============================================= */
+#rootPane > .left,
+#rootPane > .left > .vbox {
+    -fx-background-color: #16213e;
+    -fx-border-color: transparent #0f3460 transparent transparent;
+    -fx-border-width: 0 2 0 0;
+    -fx-min-width: 150px;
+    -fx-pref-width: 150px;
+    -fx-padding: 20 0;
+}
+
+#btnMenuActivos, #btnMenuUsuarios,
+#btnMenuIncidencias, #btnMenuIntervenciones {
+    -fx-background-color: transparent;
+    -fx-text-fill: #a8b2d8;
+    -fx-border-color: #0f3460;
+    -fx-border-width: 1;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-padding: 12 20;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER_LEFT;
+    -fx-pref-width: 150px;
+    -fx-margin: 0 12px;
+}
+
+#btnMenuActivos:hover, #btnMenuUsuarios:hover,
+#btnMenuIncidencias:hover, #btnMenuIntervenciones:hover {
+    -fx-background-color: #0f3460;
+    -fx-text-fill: #e94560;
+    -fx-border-color: #e94560;
+}
+
+#btnMenuActivos:pressed, #btnMenuUsuarios:pressed,
+#btnMenuIncidencias:pressed, #btnMenuIntervenciones:pressed {
+    -fx-background-color: #e94560;
+    -fx-text-fill: white;
+    -fx-border-color: #e94560;
+}
+
+#btnCerrarSesion {
+    -fx-background-color: transparent;
+    -fx-text-fill: #e94560;
+    -fx-border-color: #e94560;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER;
+    -fx-font-weight: bold;
+    -fx-pref-width: 150px;
+    -fx-effect: dropshadow(gaussian, rgba(233,69,96,0.3), 6, 0, 0, 0);
+}
+
+#btnCerrarSesion:hover {
+    -fx-background-color: #e94560;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(233,69,96,0.6), 10, 0, 0, 0);
+}
+
+#btnCerrarSesion:pressed {
+    -fx-background-color: #c73652;
+    -fx-text-fill: white;
+    -fx-effect: none;
+}
+/* =============================================
+   TABLA
+   ============================================= */
+.table-view {
+    -fx-background-color: #16213e;
+    -fx-border-color: #0f3460;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-border-width: 1;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #0f3460;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent #1a1a2e transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #e94560;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 8 0;
+}
+
+.table-row-cell {
+    -fx-background-color: #16213e;
+    -fx-text-background-color: #a8b2d8;
+    -fx-cell-size: 34px;
+    -fx-border-color: transparent transparent #0f3460 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #1a1a2e;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #0f3460;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #e94560;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: #a8b2d8;
+    -fx-padding: 4 8;
+    -fx-border-color: transparent;
+}
+
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: white;
+}
+
+.table-view .corner {
+    -fx-background-color: #0f3460;
+}
+
+/* =============================================
+   CAMPOS DE TEXTO
+   ============================================= */
+.text-field, .password-field {
+    -fx-background-color: #16213e;
+    -fx-text-fill: #a8b2d8;
+    -fx-prompt-text-fill: #4a5568;
+    -fx-border-color: #0f3460;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #e94560;
+    -fx-background-color: #1a1a2e;
+}
+
+/* =============================================
+   COMBOBOX
+   ============================================= */
+.combo-box {
+    -fx-background-color: #16213e;
+    -fx-border-color: #0f3460;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-border-width: 1;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #a8b2d8;
+    -fx-background-color: transparent;
+    -fx-padding: 4 8;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #16213e;
+    -fx-border-color: #e94560;
+    -fx-border-width: 1;
+}
+
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #0f3460;
+    -fx-text-fill: white;
+}
+
+.combo-box-popup .list-view .list-cell:selected {
+    -fx-background-color: #e94560;
+    -fx-text-fill: white;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.combo-box .arrow {
+    -fx-background-color: #e94560;
+}
+
+/* =============================================
+   BOTONES AGREGAR
+   ============================================= */
+#btnAgregarActivo, #btnAgregarUsuario,
+#btnAgregarIncidencia, #btnAgregarIntervencion {
+    -fx-background-color: #e94560;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-padding: 10 24;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+#btnAgregarActivo:hover, #btnAgregarUsuario:hover,
+#btnAgregarIncidencia:hover, #btnAgregarIntervencion:hover {
+    -fx-background-color: #c73652;
+}
+
+/* =============================================
+   LABELS GLOBALES
+   ============================================= */
+.label {
+    -fx-text-fill: #a8b2d8;
+    -fx-font-size: 13px;
+}
+
+/* =============================================
+   SCROLLBARS
+   ============================================= */
+.scroll-bar {
+    -fx-background-color: #1a1a2e;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #0f3460;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #e94560;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 2;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-background-color: #a8b2d8;
+}

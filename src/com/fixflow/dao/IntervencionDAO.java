@@ -12,16 +12,37 @@ import java.util.List;
 public class IntervencionDAO {
 
     public boolean registraIntervencion(Intervencion intervencion) {
-        // Añadimos 'fecha' a la consulta usando CURRENT_DATE para que no sea null
-        String sql = "INSERT INTO intervenciones (id_incidencia, id_usuario, descripcion_tecnica, fecha) VALUES (?, ?, ?, CURRENT_DATE)";
-        try (Connection connection = Conexion.obtenerConexion();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        String sqlInsert = "INSERT INTO intervenciones (id_incidencia, id_usuario, descripcion_tecnica, fecha) VALUES (?, ?, ?, ?)";
+        // Esta es la línea que hace que la incidencia "desaparezca" al marcarla como Resuelta
+        String sqlUpdate = "UPDATE incidencias SET prioridad = 'Resuelta' WHERE id_incidencia = ?";
 
-            preparedStatement.setInt(1, intervencion.getIdIncidencia());
-            preparedStatement.setInt(2, intervencion.getIdUsuario());
-            preparedStatement.setString(3, intervencion.getObservaciones());
+        try (Connection connection = Conexion.obtenerConexion()) {
+            // Iniciamos la transacción
+            connection.setAutoCommit(false);
 
-            return preparedStatement.executeUpdate() > 0;
+            try (PreparedStatement psInsert = connection.prepareStatement(sqlInsert);
+                 PreparedStatement psUpdate = connection.prepareStatement(sqlUpdate)) {
+
+                psInsert.setInt(1, intervencion.getIdIncidencia());
+                psInsert.setInt(2, intervencion.getIdUsuario());
+                psInsert.setString(3, intervencion.getObservaciones());
+
+                // Mantenemos tu Timestamp como lo tenías originalmente
+                psInsert.setTimestamp(4, intervencion.getFecha());
+                psInsert.executeUpdate();
+
+                // Marcamos la incidencia como resuelta
+                psUpdate.setInt(1, intervencion.getIdIncidencia());
+                psUpdate.executeUpdate();
+
+                // Confirmamos ambos cambios
+                connection.commit();
+                return true;
+
+            } catch (SQLException e) {
+                connection.rollback(); // Si algo falla, deshacemos todo
+                System.out.println("❌ Error en la transacción: " + e.getMessage());
+            }
         } catch (SQLException e){
             System.out.println("❌ Error al registrar intervención: " + e.getMessage());
         }
@@ -35,6 +56,7 @@ public class IntervencionDAO {
         try (Connection connection = Conexion.obtenerConexion();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
+
             while (resultSet.next()) {
                 Intervencion intervencion = new Intervencion();
                 intervencion.setIdIntervencion(resultSet.getInt("id_intervencion"));
@@ -42,7 +64,7 @@ public class IntervencionDAO {
                 intervencion.setIdUsuario(resultSet.getInt("id_usuario"));
                 intervencion.setObservaciones(resultSet.getString("descripcion_tecnica"));
 
-                // Leemos el Timestamp de la base de datos
+                // Volvemos a usar getTimestamp como tenías tú
                 intervencion.setFecha(resultSet.getTimestamp("fecha"));
 
                 lista.add(intervencion);

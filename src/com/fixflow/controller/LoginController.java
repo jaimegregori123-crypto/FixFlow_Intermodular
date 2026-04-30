@@ -1,6 +1,7 @@
 package com.fixflow.controller;
 
 import com.fixflow.dao.UsuarioDAO;
+import com.fixflow.main.MainView.App;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -29,7 +30,6 @@ public class LoginController {
         }
 
         if (usuarioDAO.validarLogin(user, pass)) {
-            // Si el login es correcto, cerramos esta ventana y abrimos la principal
             cargarVentanaPrincipal();
         } else {
             mostrarAlerta("Acceso Denegado", "Usuario o contraseña incorrectos.");
@@ -41,20 +41,19 @@ public class LoginController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista.fxml"));
             Parent root = loader.load();
 
-            // 1. Obtenemos el Stage actual
             Stage stage = (Stage) txtUser.getScene().getWindow();
 
-            // 2. Creamos la escena
             Scene scene = new Scene(root);
 
-            // 3. SE LO ASIGNAMOS Y FORZAMOS MAXIMIZADO
+            // Aplicamos el CSS global a la ventana principal
+            if (App.CSS_GLOBAL != null) {
+                scene.getStylesheets().add(App.CSS_GLOBAL);
+            }
+
             stage.setScene(scene);
-
-            // Esto es lo que te falta: volver a decirle que se estire
             stage.setResizable(true);
-            stage.setMaximized(false); // Truco: lo quitamos y ponemos para que refresque
+            stage.setMaximized(false);
             stage.setMaximized(true);
-
             stage.show();
 
         } catch (IOException e) {
