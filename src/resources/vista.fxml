@@ -28,7 +28,6 @@
 
                     <!-- LOGO / TÍTULO -->
                     <Label text="FixFlow" styleClass="sidebar-logo">
-                        <font><Font name="System Bold" size="32.0" /></font>
                         <VBox.margin><Insets top="20.0" bottom="5.0" /></VBox.margin>
                     </Label>
                     <Separator>

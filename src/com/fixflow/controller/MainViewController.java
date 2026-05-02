@@ -38,12 +38,10 @@ public class MainViewController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/" + archivoFxml));
             Parent vista = loader.load();
 
-            // Inyectamos el CSS global antes de añadir al BorderPane
             if (App.CSS_GLOBAL != null) {
                 vista.getStylesheets().add(App.CSS_GLOBAL);
             }
 
-            // Forzar que la vista ocupe todo el espacio disponible del BorderPane
             if (vista instanceof VBox) {
                 VBox vbox = (VBox) vista;
                 vbox.setMaxWidth(Double.MAX_VALUE);
@@ -72,9 +70,81 @@ public class MainViewController {
         }
     }
 
-    private void configurarTablaUsuarios(Node vista) {
-        System.out.println("DEBUG: Configurando tabla de usuarios y conectando formulario...");
+    private void cargarDashboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard.fxml"));
+            Parent vista = loader.load();
 
+            if (App.CSS_GLOBAL != null) {
+                vista.getStylesheets().add(App.CSS_GLOBAL);
+            }
+
+            if (vista instanceof VBox) {
+                VBox vbox = (VBox) vista;
+                vbox.setMaxWidth(Double.MAX_VALUE);
+                vbox.setMaxHeight(Double.MAX_VALUE);
+            }
+
+            rootPane.setCenter(vista);
+
+            Label lblBienvenida = (Label) vista.lookup("#lblBienvenida");
+            Label lblFecha = (Label) vista.lookup("#lblFecha");
+            Label lblHora = (Label) vista.lookup("#lblHora");
+            Label lblRol = (Label) vista.lookup("#lblRol");
+            Label lblActivos = (Label) vista.lookup("#lblTotalActivos");
+            Label lblIncidencias = (Label) vista.lookup("#lblTotalIncidencias");
+            Label lblIntervenciones = (Label) vista.lookup("#lblTotalIntervenciones");
+
+            if (lblBienvenida != null)
+                lblBienvenida.setText("Bienvenido, " + Sesion.nombreUsuario + " 👋");
+
+            if (lblFecha != null) {
+                String fecha = java.time.LocalDate.now()
+                        .format(java.time.format.DateTimeFormatter
+                                .ofPattern("EEEE, d 'de' MMMM 'de' yyyy",
+                                        new java.util.Locale("es", "ES")));
+                lblFecha.setText(fecha.substring(0, 1).toUpperCase() + fecha.substring(1));
+            }
+
+            if (lblHora != null) {
+                javafx.animation.Timeline timeline = new javafx.animation.Timeline(
+                        new javafx.animation.KeyFrame(javafx.util.Duration.seconds(1), e -> {
+                            lblHora.setText(java.time.LocalTime.now()
+                                    .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")));
+                        })
+                );
+                timeline.setCycleCount(javafx.animation.Animation.INDEFINITE);
+                timeline.play();
+            }
+
+            if (lblRol != null) {
+                lblRol.setText(Sesion.rolUsuario);
+                if (Sesion.rolUsuario != null && Sesion.rolUsuario.equalsIgnoreCase("Administrador")) {
+                    lblRol.setStyle("-fx-background-color: #0f3460; -fx-text-fill: #e94560; " +
+                            "-fx-background-radius: 20; -fx-padding: 4 12; " +
+                            "-fx-font-size: 11px; -fx-font-weight: bold;");
+                } else {
+                    lblRol.setStyle("-fx-background-color: #0f3460; -fx-text-fill: #a8b2d8; " +
+                            "-fx-background-radius: 20; -fx-padding: 4 12; " +
+                            "-fx-font-size: 11px; -fx-font-weight: bold;");
+                }
+            }
+
+            if (lblActivos != null)
+                lblActivos.setText(String.valueOf(activoDAO.listarActivos().size()));
+
+            if (lblIncidencias != null)
+                lblIncidencias.setText(String.valueOf(incidenciaDAO.listarIncidencias().size()));
+
+            if (lblIntervenciones != null)
+                lblIntervenciones.setText(String.valueOf(intervencionDAO.obtenerIntervenciones().size()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void configurarTablaUsuarios(Node vista) {
         txtUserNombre = (TextField) vista.lookup("#txtUserNombre");
         txtUserRol = (ComboBox<String>) vista.lookup("#txtUserRol");
         txtUserPassword = (PasswordField) vista.lookup("#txtUserPassword");
@@ -82,7 +152,6 @@ public class MainViewController {
 
         if (btnAgregarUsuario != null) {
             btnAgregarUsuario.setOnAction(event -> onAgregarUsuarioClick());
-            System.out.println("✅ Botón de usuarios vinculado.");
         }
 
         if (txtUserRol != null) {
@@ -96,15 +165,10 @@ public class MainViewController {
             tabla.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("nombre"));
             tabla.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("rol"));
             tabla.setItems(FXCollections.observableArrayList(usuarioDAO.listarUsuarios()));
-            System.out.println("✅ Tabla de usuarios cargada con éxito.");
-        } else {
-            System.out.println("❌ Error: No se encontró #tablaUsuariosView");
         }
     }
 
     private void configurarTablaActivos(Node vista) {
-        System.out.println("DEBUG: Configurando tabla y conectando botón manualmente...");
-
         txtNombre = (TextField) vista.lookup("#txtNombre");
         txtUbicacion = (TextField) vista.lookup("#txtUbicacion");
         txtEstado = (TextField) vista.lookup("#txtEstado");
@@ -112,29 +176,21 @@ public class MainViewController {
         Button btnAgregar = (Button) vista.lookup("#btnAgregarActivo");
         if (btnAgregar != null) {
             btnAgregar.setOnAction(event -> onAgregarActivoClick());
-            System.out.println("✅ Botón vinculado correctamente.");
-        } else {
-            System.out.println("❌ No se encontró el botón con ID #btnAgregarActivo");
         }
 
         Node componente = vista.lookup("#tablaActivosView");
         if (componente instanceof TableView) {
             @SuppressWarnings("unchecked")
             TableView<Activo> tabla = (TableView<Activo>) componente;
-
             tabla.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("idActivo"));
             tabla.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("nombre"));
             tabla.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("ubicacion"));
             tabla.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("estadoOperativo"));
-
-            List<Activo> lista = activoDAO.listarActivos();
-            tabla.setItems(FXCollections.observableArrayList(lista));
+            tabla.setItems(FXCollections.observableArrayList(activoDAO.listarActivos()));
         }
     }
 
     private void configurarTablaIncidencias(Node vista) {
-        System.out.println("🔍 Configurando módulo de incidencias...");
-
         txtIncidenciaTitulo = (TextField) vista.lookup("#txtIncidenciaTitulo");
         txtIncidenciaDesc = (TextField) vista.lookup("#txtIncidenciaDesc");
         txtIncidenciaActivo = (TextField) vista.lookup("#txtIncidenciaActivo");
@@ -160,10 +216,38 @@ public class MainViewController {
             tabla.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("prioridad"));
             tabla.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("fecha"));
             tabla.getColumns().get(5).setCellValueFactory(new PropertyValueFactory<>("idActivo"));
+            tabla.getColumns().get(6).setCellValueFactory(new PropertyValueFactory<>("estado"));
 
             List<Incidencia> lista = incidenciaDAO.listarIncidencias();
             if (lista != null) {
                 tabla.setItems(FXCollections.observableArrayList(lista));
+            }
+
+            Button btnResolver = (Button) vista.lookup("#btnResolver");
+            if (btnResolver != null) {
+                btnResolver.setOnAction(event -> {
+                    Incidencia seleccionada = tabla.getSelectionModel().getSelectedItem();
+
+                    if (seleccionada == null) {
+                        mostrarAlerta("Aviso", "Selecciona una incidencia primero.");
+                        return;
+                    }
+
+                    if ("Resuelta".equals(seleccionada.getEstado())) {
+                        mostrarAlerta("Aviso", "Esta incidencia ya está resuelta.");
+                        return;
+                    }
+
+                    Intervencion intervencion = new Intervencion();
+                    intervencion.setIdIncidencia(seleccionada.getIdIncidencia());
+                    intervencion.setIdUsuario(Sesion.idUsuario);
+                    intervencion.setObservaciones("Incidencia resuelta: " + seleccionada.getTitulo());
+                    intervencion.setFecha(new java.sql.Timestamp(System.currentTimeMillis()));
+
+                    intervencionDAO.registraIntervencion(intervencion);
+                    incidenciaDAO.resolverIncidencia(seleccionada.getIdIncidencia());
+                    onIncidenciasClick();
+                });
             }
         }
     }
@@ -183,12 +267,19 @@ public class MainViewController {
             tabla.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("idIntervencion"));
             tabla.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("observaciones"));
             tabla.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("fecha"));
-            tabla.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("idIncidencia"));
-            tabla.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("idUsuario"));
-
+            tabla.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("tituloIncidencia"));
+            tabla.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("nombreUsuario"));
             tabla.setItems(FXCollections.observableArrayList(intervencionDAO.obtenerIntervenciones()));
-            System.out.println("📊 Datos de intervenciones cargados.");
         }
+    }
+
+    // Método helper para mostrar alertas al usuario
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
     private void onAgregarIntervencionClick() {
@@ -199,49 +290,36 @@ public class MainViewController {
             nuevaInter.setIdUsuario(Integer.parseInt(txtIntervencionUsuario.getText()));
 
             if (nuevaInter.getObservaciones().isEmpty()) {
-                System.out.println("⚠️ Escribe una descripción técnica.");
+                mostrarAlerta("Aviso", "Escribe una descripción técnica.");
                 return;
             }
 
             if (intervencionDAO.registraIntervencion(nuevaInter)) {
-                System.out.println("✅ Intervención guardada con éxito.");
                 onIntervencionesClick();
             }
 
         } catch (NumberFormatException e) {
-            System.out.println("⚠️ ERROR: El ID de incidencia y de usuario deben ser números enteros.");
+            mostrarAlerta("Error", "El ID de incidencia y de usuario deben ser números enteros.");
         } catch (Exception e) {
-            System.out.println("❌ Error inesperado: " + e.getMessage());
+            mostrarAlerta("Error", "Error inesperado: " + e.getMessage());
         }
     }
 
-    @FXML
-    private TableView<Incidencia> tablaIncidenciasView;
+    @FXML private TableView<Incidencia> tablaIncidenciasView;
 
     @FXML private void onUsuariosClick()     { cargarVista("tabla_usuarios.fxml"); }
     @FXML private void onActivosClick()      { cargarVista("tabla_activos.fxml"); }
-
-    @FXML
-    private void onIncidenciasClick() {
-        System.out.println("DEBUG: Pulsado botón Incidencias");
-        cargarVista("tabla_incidencias.fxml");
-    }
-
-    @FXML
-    private void onIntervencionesClick() {
-        cargarVista("tabla_intervenciones.fxml");
-    }
+    @FXML private void onIncidenciasClick()  { cargarVista("tabla_incidencias.fxml"); }
+    @FXML private void onIntervencionesClick() { cargarVista("tabla_intervenciones.fxml"); }
 
     @FXML
     private void onAgregarActivoClick() {
-        System.out.println("🚀 Botón pulsado, procesando guardado...");
-
         String nom = txtNombre.getText();
         String ubi = txtUbicacion.getText();
         String est = txtEstado.getText();
 
         if (nom.isEmpty()) {
-            System.out.println("⚠️ El nombre es obligatorio");
+            mostrarAlerta("Aviso", "El nombre del activo es obligatorio.");
             return;
         }
 
@@ -251,7 +329,6 @@ public class MainViewController {
         a.setEstadoOperativo(est);
 
         if (activoDAO.insertarActivo(a)) {
-            System.out.println("✅ Guardado con éxito en MySQL");
             onActivosClick();
         }
     }
@@ -263,7 +340,7 @@ public class MainViewController {
         String pass = txtUserPassword.getText();
 
         if (nombre.isEmpty() || rol.isEmpty() || pass.isEmpty()) {
-            System.out.println("⚠️ Rellena todos los campos de usuario");
+            mostrarAlerta("Aviso", "Rellena todos los campos de usuario.");
             return;
         }
 
@@ -273,7 +350,6 @@ public class MainViewController {
         u.setPassword(pass);
 
         if (usuarioDAO.insertarUsuario(u)) {
-            System.out.println("✅ Usuario guardado");
             txtUserNombre.clear();
             txtUserRol.getSelectionModel().clearSelection();
             txtUserPassword.clear();
@@ -289,7 +365,7 @@ public class MainViewController {
         String idAct = txtIncidenciaActivo.getText();
 
         if (titulo.isEmpty() || prio == null || idAct.isEmpty()) {
-            System.out.println("⚠️ Faltan datos obligatorios");
+            mostrarAlerta("Aviso", "Faltan datos obligatorios.");
             return;
         }
 
@@ -302,7 +378,6 @@ public class MainViewController {
             i.setFecha(Date.valueOf(LocalDate.now()));
 
             if (incidenciaDAO.insertarIncidencia(i)) {
-                System.out.println("✅ Incidencia '" + titulo + "' creada con fecha: " + i.getFecha());
                 txtIncidenciaTitulo.clear();
                 txtIncidenciaDesc.clear();
                 txtIncidenciaActivo.clear();
@@ -310,7 +385,7 @@ public class MainViewController {
                 onIncidenciasClick();
             }
         } catch (NumberFormatException e) {
-            System.out.println("⚠️ El ID del activo debe ser un número.");
+            mostrarAlerta("Error", "El ID del activo debe ser un número.");
         }
     }
 
@@ -324,10 +399,8 @@ public class MainViewController {
             Parent root = loader.load();
 
             Stage stage = (Stage) btnCerrarSesion.getScene().getWindow();
-
             Scene scene = new Scene(root);
 
-            // Reaplicamos el CSS global al volver al login
             if (App.CSS_GLOBAL != null) {
                 scene.getStylesheets().add(App.CSS_GLOBAL);
             }
@@ -338,8 +411,6 @@ public class MainViewController {
             stage.setMaximized(true);
             stage.show();
 
-            System.out.println("🚪 Sesión cerrada y ventana forzada a pantalla completa.");
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -347,17 +418,12 @@ public class MainViewController {
 
     private void aplicarPermisos() {
         String rol = Sesion.rolUsuario;
-        System.out.println("🔐 Rol detectado: " + rol);
 
         if (rol != null && rol.equalsIgnoreCase("técnico")) {
             Node btnUsuarios = rootPane.lookup("#btnMenuUsuarios");
-
             if (btnUsuarios != null) {
                 btnUsuarios.setVisible(false);
                 btnUsuarios.setManaged(false);
-                System.out.println("🚫 Botón de Usuarios ocultado correctamente.");
-            } else {
-                System.out.println("⚠️ No se pudo encontrar el botón #btnMenuUsuarios para ocultarlo.");
             }
         }
     }
@@ -365,6 +431,7 @@ public class MainViewController {
     @FXML
     public void initialize() {
         aplicarPermisos();
+        cargarDashboard();
     }
 
     @FXML private TextField txtNombre;

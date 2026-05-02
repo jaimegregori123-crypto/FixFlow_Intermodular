@@ -11,8 +11,7 @@ public class IncidenciaDAO {
 
     public List<Incidencia> listarIncidencias() {
         List<Incidencia> lista = new ArrayList<>();
-        // 1. Asegúrate de que la columna se llame 'fecha_creacion' en tu DB
-        String sql = "SELECT id_incidencia, titulo, descripcion, prioridad, fecha_creacion, id_activo FROM incidencias";
+        String sql = "SELECT id_incidencia, titulo, descripcion, prioridad, fecha_creacion, id_activo, estado FROM incidencias";
 
         try (Connection conn = Conexion.obtenerConexion();
              Statement stmt = conn.createStatement();
@@ -25,9 +24,8 @@ public class IncidenciaDAO {
                 i.setDescripcion(rs.getString("descripcion"));
                 i.setPrioridad(rs.getString("prioridad"));
                 i.setIdActivo(rs.getInt("id_activo"));
-                // --- NUEVO: Cargamos la fecha de la DB al objeto ---
                 i.setFecha(rs.getDate("fecha_creacion"));
-
+                i.setEstado(rs.getString("estado"));
                 lista.add(i);
             }
         } catch (SQLException e) {
@@ -37,8 +35,7 @@ public class IncidenciaDAO {
     }
 
     public boolean insertarIncidencia(Incidencia i) {
-        // Usamos la fecha que ya viene en el objeto 'i' que seteamos en el Controller
-        String sql = "INSERT INTO incidencias (titulo, descripcion, prioridad, fecha_creacion, id_activo) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO incidencias (titulo, descripcion, prioridad, fecha_creacion, id_activo, estado) VALUES (?, ?, ?, ?, ?, 'Abierta')";
 
         try (Connection conn = Conexion.obtenerConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -46,7 +43,6 @@ public class IncidenciaDAO {
             pstmt.setString(1, i.getTitulo());
             pstmt.setString(2, i.getDescripcion());
             pstmt.setString(3, i.getPrioridad());
-            // --- NUEVO: Enviamos la fecha del objeto ---
             pstmt.setDate(4, i.getFecha());
             pstmt.setInt(5, i.getIdActivo());
 
@@ -58,7 +54,21 @@ public class IncidenciaDAO {
         }
     }
 
-    // He mantenido este método por si lo usas en otro sitio, pero ahora usa la misma lógica
+    public boolean resolverIncidencia(int idIncidencia) {
+        String sql = "UPDATE incidencias SET estado = 'Resuelta' WHERE id_incidencia = ?";
+
+        try (Connection conn = Conexion.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idIncidencia);
+            return pstmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.out.println("❌ Error al resolver incidencia: " + e.getMessage());
+            return false;
+        }
+    }
+
     public boolean reportarIncidencia(Incidencia inc) {
         return insertarIncidencia(inc);
     }

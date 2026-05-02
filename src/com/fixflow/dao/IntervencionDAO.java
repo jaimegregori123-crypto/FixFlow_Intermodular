@@ -13,63 +13,61 @@ public class IntervencionDAO {
 
     public boolean registraIntervencion(Intervencion intervencion) {
         String sqlInsert = "INSERT INTO intervenciones (id_incidencia, id_usuario, descripcion_tecnica, fecha) VALUES (?, ?, ?, ?)";
-        // Esta es la línea que hace que la incidencia "desaparezca" al marcarla como Resuelta
-        String sqlUpdate = "UPDATE incidencias SET prioridad = 'Resuelta' WHERE id_incidencia = ?";
 
         try (Connection connection = Conexion.obtenerConexion()) {
-            // Iniciamos la transacción
             connection.setAutoCommit(false);
 
-            try (PreparedStatement psInsert = connection.prepareStatement(sqlInsert);
-                 PreparedStatement psUpdate = connection.prepareStatement(sqlUpdate)) {
+            try (PreparedStatement psInsert = connection.prepareStatement(sqlInsert)) {
 
                 psInsert.setInt(1, intervencion.getIdIncidencia());
                 psInsert.setInt(2, intervencion.getIdUsuario());
                 psInsert.setString(3, intervencion.getObservaciones());
-
-                // Mantenemos tu Timestamp como lo tenías originalmente
                 psInsert.setTimestamp(4, intervencion.getFecha());
                 psInsert.executeUpdate();
 
-                // Marcamos la incidencia como resuelta
-                psUpdate.setInt(1, intervencion.getIdIncidencia());
-                psUpdate.executeUpdate();
-
-                // Confirmamos ambos cambios
                 connection.commit();
                 return true;
 
             } catch (SQLException e) {
-                connection.rollback(); // Si algo falla, deshacemos todo
+                connection.rollback();
                 System.out.println("❌ Error en la transacción: " + e.getMessage());
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("❌ Error al registrar intervención: " + e.getMessage());
         }
         return false;
     }
 
-    public List<Intervencion> obtenerIntervenciones(){
+    public List<Intervencion> obtenerIntervenciones() {
         List<Intervencion> lista = new ArrayList<>();
-        String sql = "SELECT id_intervencion, id_incidencia, id_usuario, descripcion_tecnica, fecha FROM intervenciones";
+
+        // JOIN para obtener nombre de usuario y título de incidencia
+        String sql = "SELECT i.id_intervencion, i.id_incidencia, inc.titulo AS titulo_incidencia, " +
+                "i.id_usuario, u.username AS nombre_usuario, " +
+                "i.descripcion_tecnica, i.fecha " +
+                "FROM intervenciones i " +
+                "LEFT JOIN usuarios u ON i.id_usuario = u.id_usuario " +
+                "LEFT JOIN incidencias inc ON i.id_incidencia = inc.id_incidencia";
 
         try (Connection connection = Conexion.obtenerConexion();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
-            while (resultSet.next()) {
+            while (rs.next()) {
                 Intervencion intervencion = new Intervencion();
-                intervencion.setIdIntervencion(resultSet.getInt("id_intervencion"));
-                intervencion.setIdIncidencia(resultSet.getInt("id_incidencia"));
-                intervencion.setIdUsuario(resultSet.getInt("id_usuario"));
-                intervencion.setObservaciones(resultSet.getString("descripcion_tecnica"));
+                intervencion.setIdIntervencion(rs.getInt("id_intervencion"));
+                intervencion.setIdIncidencia(rs.getInt("id_incidencia"));
+                intervencion.setIdUsuario(rs.getInt("id_usuario"));
+                intervencion.setObservaciones(rs.getString("descripcion_tecnica"));
+                intervencion.setFecha(rs.getTimestamp("fecha"));
 
-                // Volvemos a usar getTimestamp como tenías tú
-                intervencion.setFecha(resultSet.getTimestamp("fecha"));
+                // Campos extra para mostrar en tabla
+                intervencion.setNombreUsuario(rs.getString("nombre_usuario"));
+                intervencion.setTituloIncidencia(rs.getString("titulo_incidencia"));
 
                 lista.add(intervencion);
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("❌ Error al listar intervenciones: " + e.getMessage());
         }
         return lista;

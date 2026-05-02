@@ -14,7 +14,7 @@ public class UsuarioDAO {
      * Método para validar el acceso al sistema
      */
     public boolean validarLogin(String user, String pass) {
-        String sql = "SELECT username, rol FROM usuarios WHERE username = ? AND password = ?";
+        String sql = "SELECT id_usuario, username, rol FROM usuarios WHERE username = ? AND password = ?";
 
         try (Connection conn = Conexion.obtenerConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -26,6 +26,7 @@ public class UsuarioDAO {
 
             if (rs.next()) {
                 // Si hay resultado, guardamos los datos en la Sesión global
+                Sesion.idUsuario = rs.getInt("id_usuario");
                 Sesion.nombreUsuario = rs.getString("username");
                 Sesion.rolUsuario = rs.getString("rol");
                 System.out.println("✅ Login correcto: " + Sesion.nombreUsuario + " (" + Sesion.rolUsuario + ")");

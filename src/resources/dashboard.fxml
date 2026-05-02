@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="24.0"
+      xmlns="http://javafx.com/javafx/26"
+      xmlns:fx="http://javafx.com/fxml/1"
+      style="-fx-padding: 60;">
+
+    <!-- LOGO -->
+    <Label text="FixFlow"
+           style="-fx-font-size: 55px; -fx-font-weight: bold; -fx-text-fill: #e94560;
+              -fx-effect: dropshadow(gaussian, rgba(233,69,96,0.4), 8, 0.2, 0, 0);" />
+    <Label text="Gestión de Activos e Incidencias"
+           style="-fx-text-fill: #4a5568; -fx-font-size: 13px;" />
+
+    <!-- BIENVENIDA -->
+    <!-- BIENVENIDA -->
+    <VBox alignment="CENTER" spacing="12.0">
+        <Label fx:id="lblBienvenida"
+               style="-fx-text-fill: #a8b2d8; -fx-font-size: 20px; -fx-font-weight: bold;" />
+        <Label fx:id="lblRol"
+               style="-fx-font-size: 11px;" />
+        <Label fx:id="lblFecha"
+               style="-fx-text-fill: #4a5568; -fx-font-size: 13px;" />
+        <Label fx:id="lblHora"
+               style="-fx-text-fill: #e94560; -fx-font-size: 17px;" />
+    </VBox>
+
+    <!-- TARJETAS DE ESTADÍSTICAS -->
+    <HBox alignment="CENTER" spacing="30.0">
+
+        <VBox alignment="CENTER" spacing="8.0" styleClass="stat-card">
+            <Label text="⚙" style="-fx-font-size: 28px; -fx-text-fill: #e94560;" />
+            <Label fx:id="lblTotalActivos"
+                   style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #e94560;" />
+            <Label text="Activos"
+                   style="-fx-text-fill: #a8b2d8; -fx-font-size: 13px;" />
+        </VBox>
+
+        <VBox alignment="CENTER" spacing="8.0" styleClass="stat-card">
+            <Label text="⚠" style="-fx-font-size: 28px; -fx-text-fill: #e94560;" />
+            <Label fx:id="lblTotalIncidencias"
+                   style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #e94560;" />
+            <Label text="Incidencias"
+                   style="-fx-text-fill: #a8b2d8; -fx-font-size: 13px;" />
+        </VBox>
+
+        <VBox alignment="CENTER" spacing="8.0" styleClass="stat-card">
+            <Label text="🔧" style="-fx-font-size: 28px; -fx-text-fill: #e94560;" />
+            <Label fx:id="lblTotalIntervenciones"
+                   style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #e94560;" />
+            <Label text="Intervenciones"
+                   style="-fx-text-fill: #a8b2d8; -fx-font-size: 13px;" />
+        </VBox>
+
+    </HBox>
+
+</VBox>

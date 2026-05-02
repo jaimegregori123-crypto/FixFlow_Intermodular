@@ -21,35 +21,62 @@ Pane, .pane {
 /* =============================================
    LOGIN
    ============================================= */
+/* VBox exterior — fondo de pantalla completa */
 .root > .vbox {
-    -fx-background-color: #16213e;
-    -fx-border-color: #0f3460;
-    -fx-border-width: 1;
-    -fx-border-radius: 12;
-    -fx-background-radius: 12;
-    -fx-padding: 40 50;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 20, 0, 0, 4);
-    -fx-max-width: 380;
-    -fx-max-height: 340;
-}
-
-.root > .vbox > .label {
-    -fx-text-fill: #e94560;
-    -fx-font-size: 28px;
-    -fx-font-weight: bold;
-    -fx-padding: 0 0 10 0;
-}
-
-.root > .vbox > .vbox {
-    -fx-background-color: transparent;
+    -fx-background-color: #1a1a2e;
     -fx-border-color: transparent;
 }
 
+/* Tarjeta central */
+.root > .vbox > .vbox {
+    -fx-background-color: #16213e;
+    -fx-border-color: #0f3460;
+    -fx-border-width: 1;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+    -fx-padding: 50 60;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 24, 0, 0, 4);
+    -fx-max-width: 420;
+    -fx-min-width: 380;
+}
+
+/* Logo FixFlow */
 .root > .vbox > .vbox > .label {
+    -fx-text-fill: #e94560;
+    -fx-font-size: 42px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 5 0;
+}
+
+/* Labels Usuario / Contraseña */
+.root > .vbox > .vbox > .vbox > .label {
     -fx-text-fill: #a8b2d8;
     -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-padding: 4 0 2 0;
+}
+
+/* Eliminar sombra interior de los campos */
+.text-field, .password-field {
+    -fx-background-color: #16213e, #16213e, #16213e;
+    -fx-background-insets: 0, 0, 0;
+    -fx-background-radius: 6, 6, 6;
+    -fx-text-fill: #a8b2d8;
+    -fx-prompt-text-fill: #4a5568;
+    -fx-border-color: #0f3460;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
+    -fx-effect: none;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-background-color: #1a1a2e, #1a1a2e, #1a1a2e;
+    -fx-background-insets: 0, 0, 0;
+    -fx-background-radius: 6, 6, 6;
+    -fx-border-color: #e94560;
+    -fx-effect: none;
 }
 
 #btnLogin {
@@ -60,9 +87,9 @@ Pane, .pane {
     -fx-border-radius: 6;
     -fx-background-radius: 6;
     -fx-border-color: transparent;
-    -fx-padding: 10 30;
+    -fx-padding: 12 0;
     -fx-cursor: hand;
-    -fx-pref-width: 160px;
+    -fx-pref-width: 300px;
 }
 
 #btnLogin:hover {
@@ -73,14 +100,35 @@ Pane, .pane {
     -fx-background-color: #a02d44;
 }
 
+
+
+/* =============================================
+   TARJETAS DASHBOARD
+   ============================================= */
+.stat-card {
+    -fx-background-color: #16213e;
+    -fx-border-color: #0f3460;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 30 40;
+    -fx-min-width: 180px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0, 0, 2);
+}
+
+.stat-card:hover {
+    -fx-border-color: #e94560;
+    -fx-effect: dropshadow(gaussian, rgba(233,69,96,0.3), 12, 0, 0, 0);
+}
+
 /* =============================================
    LOGO SIDEBAR
    ============================================= */
 .sidebar-logo {
-    -fx-text-fill: #e94560;
-    -fx-font-size: 26px;
+    -fx-text-fill: #e94560 !important;
+    -fx-font-size: 30px !important;
     -fx-font-weight: bold;
-    -fx-padding: 0;
+    -fx-effect: dropshadow(gaussian, rgba(233,69,96,0.2), 8, 0.2, 0, 0);
 }
 
 .separator {
@@ -114,6 +162,7 @@ Pane, .pane {
     -fx-cursor: hand;
     -fx-alignment: CENTER_LEFT;
     -fx-pref-width: 150px;
+    -fx-margin: 0 12px;
 }
 
 #btnMenuActivos:hover, #btnMenuUsuarios:hover,
@@ -121,7 +170,6 @@ Pane, .pane {
     -fx-background-color: #0f3460;
     -fx-text-fill: #e94560;
     -fx-border-color: #e94560;
-    -fx-border-width: 1;
 }
 
 #btnMenuActivos:pressed, #btnMenuUsuarios:pressed,
@@ -299,6 +347,22 @@ Pane, .pane {
 #btnAgregarActivo:hover, #btnAgregarUsuario:hover,
 #btnAgregarIncidencia:hover, #btnAgregarIntervencion:hover {
     -fx-background-color: #c73652;
+}
+
+#btnResolver {
+    -fx-background-color: #28a745;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-padding: 10 24;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+#btnResolver:hover {
+    -fx-background-color: #218838;
 }
 
 /* =============================================

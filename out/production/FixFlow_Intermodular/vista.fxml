@@ -22,14 +22,16 @@
                     AnchorPane.rightAnchor="0.0">
             <left>
                 <VBox alignment="TOP_CENTER" spacing="8.0" BorderPane.alignment="CENTER">
+                    <padding>
+                        <Insets left="12.0" right="12.0" top="0.0" bottom="0.0" />
+                    </padding>
 
                     <!-- LOGO / TÍTULO -->
                     <Label text="FixFlow" styleClass="sidebar-logo">
-                        <font><Font name="System Bold" size="26.0" /></font>
                         <VBox.margin><Insets top="20.0" bottom="5.0" /></VBox.margin>
                     </Label>
                     <Separator>
-                        <VBox.margin><Insets bottom="10.0" top="4.0" left="15.0" right="15.0" /></VBox.margin>
+                        <VBox.margin><Insets bottom="10.0" top="4.0" left="5.0" right="5.0" /></VBox.margin>
                     </Separator>
 
                     <!-- MENÚ -->
@@ -38,11 +40,11 @@
                     <Button fx:id="btnMenuIncidencias" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onIncidenciasClick" text="⚠  Incidencias" />
                     <Button fx:id="btnMenuIntervenciones" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onIntervencionesClick" text="🔧  Intervenciones" />
 
-                    <!-- ESPACIADOR: empuja Cerrar Sesión hacia abajo -->
+                    <!-- ESPACIADOR -->
                     <Region VBox.vgrow="ALWAYS" />
 
                     <Button fx:id="btnCerrarSesion" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onCerrarSesionClick" text="✕  Cerrar Sesión">
-                        <VBox.margin><Insets bottom="15.0" left="10.0" right="10.0" /></VBox.margin>
+                        <VBox.margin><Insets bottom="15.0" left="0.0" right="0.0" /></VBox.margin>
                     </Button>
 
                 </VBox>

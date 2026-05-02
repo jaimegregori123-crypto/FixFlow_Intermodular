@@ -1,24 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="20.0" prefHeight="400.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fixflow.controller.LoginController">
-    <children>
-        <Label text="FixFlow Login">
-            <font>
-                <Font name="System Bold" size="24.0" />
-            </font>
-        </Label>
-        <VBox maxWidth="250.0" spacing="10.0">
-            <children>
-                <Label text="Usuario:" />
-                <TextField fx:id="txtUser" promptText="Introduce tu usuario" />
-                <Label text="Contraseña:" />
-                <PasswordField fx:id="txtPass" promptText="Introduce tu contraseña" />
-            </children>
+<VBox alignment="CENTER" spacing="0.0"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.fixflow.controller.LoginController">
+
+    <!-- TARJETA CENTRAL -->
+    <VBox alignment="CENTER" spacing="16.0"
+          style="-fx-background-color: #1a1a2e;
+                 -fx-border-color: #0f3460;
+                 -fx-border-width: 1;
+                 -fx-border-radius: 14;
+                 -fx-background-radius: 14;
+                 -fx-padding: 50 60;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 24, 0, 0, 4);
+                 -fx-max-width: 420;
+                 -fx-min-width: 380;">
+
+        <!-- LOGO -->
+        <Label text="FixFlow" styleClass="sidebar-logo"
+               style="-fx-font-size: 42px; -fx-padding: 0 0 5 0;" />
+
+        <Label text="Gestión de Activos e Incidencias"
+               style="-fx-text-fill: #4a5568; -fx-font-size: 13px;" />
+
+        <Separator style="-fx-background-color: #0f3460;"
+                   opacity="0.5">
+            <VBox.margin><Insets top="6.0" bottom="6.0" /></VBox.margin>
+        </Separator>
+
+        <!-- CAMPOS -->
+        <VBox spacing="6.0" maxWidth="300.0">
+            <Label text="Usuario"
+                   style="-fx-text-fill: #a8b2d8; -fx-font-size: 12px; -fx-font-weight: bold;" />
+            <TextField fx:id="txtUser" promptText="Usuario:" maxWidth="300.0" />
         </VBox>
-        <Button fx:id="btnLogin" mnemonicParsing="false" onAction="#handleLogin" prefWidth="100.0" text="Entrar" />
-    </children>
+
+        <VBox spacing="6.0" maxWidth="300.0">
+            <Label text="Contraseña"
+                   style="-fx-text-fill: #a8b2d8; -fx-font-size: 12px; -fx-font-weight: bold;" />
+            <PasswordField fx:id="txtPass" promptText="Contraseña" maxWidth="300.0" />
+        </VBox>
+
+        <!-- BOTÓN -->
+        <Button fx:id="btnLogin" text="Entrar"
+                mnemonicParsing="false"
+                onAction="#handleLogin"
+                maxWidth="300.0"
+                style="-fx-pref-width: 300px;">
+            <VBox.margin><Insets top="10.0" /></VBox.margin>
+        </Button>
+
+    </VBox>
+
 </VBox>
