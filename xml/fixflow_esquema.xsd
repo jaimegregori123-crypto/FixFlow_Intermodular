@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- Elemento raíz -->
+    <xs:element name="fixflow">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="activos" type="tipoActivos"/>
+                <xs:element name="incidencias" type="tipoIncidencias"/>
+                <xs:element name="intervenciones" type="tipoIntervenciones"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- ACTIVOS -->
+    <xs:complexType name="tipoActivos">
+        <xs:sequence>
+            <xs:element name="activo" type="tipoActivo" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="tipoActivo">
+        <xs:sequence>
+            <xs:element name="id" type="xs:positiveInteger"/>
+            <xs:element name="nombre">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:minLength value="2"/>
+                        <xs:maxLength value="100"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="ubicacion" type="xs:string"/>
+            <xs:element name="estado">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="Operativo"/>
+                        <xs:enumeration value="En Mantenimiento"/>
+                        <xs:enumeration value="Fuera de Servicio"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- INCIDENCIAS -->
+    <xs:complexType name="tipoIncidencias">
+        <xs:sequence>
+            <xs:element name="incidencia" type="tipoIncidencia" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="tipoIncidencia">
+        <xs:sequence>
+            <xs:element name="id" type="xs:positiveInteger"/>
+            <xs:element name="titulo">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:minLength value="3"/>
+                        <xs:maxLength value="150"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="descripcion" type="xs:string"/>
+            <xs:element name="prioridad">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="Baja"/>
+                        <xs:enumeration value="Media"/>
+                        <xs:enumeration value="Alta"/>
+                        <xs:enumeration value="Crítica"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="fecha" type="xs:date"/>
+            <xs:element name="idActivo" type="xs:positiveInteger"/>
+            <xs:element name="estado">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="Abierta"/>
+                        <xs:enumeration value="Resuelta"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- INTERVENCIONES -->
+    <xs:complexType name="tipoIntervenciones">
+        <xs:sequence>
+            <xs:element name="intervencion" type="tipoIntervencion" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="tipoIntervencion">
+        <xs:sequence>
+            <xs:element name="id" type="xs:positiveInteger"/>
+            <xs:element name="observaciones">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:minLength value="5"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="fecha" type="xs:date"/>
+            <xs:element name="idIncidencia" type="xs:positiveInteger"/>
+            <xs:element name="tecnico">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:minLength value="2"/>
+                        <xs:maxLength value="50"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

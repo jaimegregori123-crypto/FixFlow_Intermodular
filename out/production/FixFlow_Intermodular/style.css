@@ -329,7 +329,7 @@ Pane, .pane {
 }
 
 /* =============================================
-   BOTONES AGREGAR
+   BOTONES
    ============================================= */
 #btnAgregarActivo, #btnAgregarUsuario,
 #btnAgregarIncidencia, #btnAgregarIntervencion {
@@ -363,6 +363,22 @@ Pane, .pane {
 
 #btnResolver:hover {
     -fx-background-color: #218838;
+}
+
+#btnEliminarActivo, #btnEliminarUsuario, #btnEliminarIncidencia {
+    -fx-background-color: #6c1f1f;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-padding: 10 24;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+#btnEliminarActivo:hover, #btnEliminarUsuario:hover, #btnEliminarIncidencia:hover {
+    -fx-background-color: #a02020;
 }
 
 /* =============================================

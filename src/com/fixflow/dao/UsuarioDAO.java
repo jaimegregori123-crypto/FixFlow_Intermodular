@@ -80,4 +80,16 @@ public class UsuarioDAO {
         }
         return lista;
     }
+
+    public boolean eliminarUsuario(int idUsuario) {
+        String sql = "DELETE FROM usuarios WHERE id_usuario = ?";
+        try (Connection conn = Conexion.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, idUsuario);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("❌ Error al eliminar usuario: " + e.getMessage());
+            return false;
+        }
+    }
 }

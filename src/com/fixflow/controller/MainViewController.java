@@ -165,6 +165,24 @@ public class MainViewController {
             tabla.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("nombre"));
             tabla.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("rol"));
             tabla.setItems(FXCollections.observableArrayList(usuarioDAO.listarUsuarios()));
+
+            Button btnEliminar = (Button) vista.lookup("#btnEliminarUsuario");
+            if (btnEliminar != null) {
+                btnEliminar.setOnAction(event -> {
+                    Usuario seleccionado = tabla.getSelectionModel().getSelectedItem();
+                    if (seleccionado == null) {
+                        mostrarAlerta("Aviso", "Selecciona un usuario primero.");
+                        return;
+                    }
+                    if (seleccionado.getId() == Sesion.idUsuario) {
+                        mostrarAlerta("Error", "No puedes eliminar tu propio usuario.");
+                        return;
+                    }
+                    if (usuarioDAO.eliminarUsuario(seleccionado.getId())) {
+                        onUsuariosClick();
+                    }
+                });
+            }
         }
     }
 
@@ -187,6 +205,20 @@ public class MainViewController {
             tabla.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("ubicacion"));
             tabla.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("estadoOperativo"));
             tabla.setItems(FXCollections.observableArrayList(activoDAO.listarActivos()));
+
+            Button btnEliminar = (Button) vista.lookup("#btnEliminarActivo");
+            if (btnEliminar != null) {
+                btnEliminar.setOnAction(event -> {
+                    Activo seleccionado = tabla.getSelectionModel().getSelectedItem();
+                    if (seleccionado == null) {
+                        mostrarAlerta("Aviso", "Selecciona un activo primero.");
+                        return;
+                    }
+                    if (activoDAO.eliminarActivo(seleccionado.getIdActivo())) {
+                        onActivosClick();
+                    }
+                });
+            }
         }
     }
 
@@ -249,6 +281,20 @@ public class MainViewController {
                     onIncidenciasClick();
                 });
             }
+
+            Button btnEliminarIncidencia = (Button) vista.lookup("#btnEliminarIncidencia");
+            if (btnEliminarIncidencia != null) {
+                btnEliminarIncidencia.setOnAction(event -> {
+                    Incidencia seleccionada = tabla.getSelectionModel().getSelectedItem();
+                    if (seleccionada == null) {
+                        mostrarAlerta("Aviso", "Selecciona una incidencia primero.");
+                        return;
+                    }
+                    if (incidenciaDAO.eliminarIncidencia(seleccionada.getIdIncidencia())) {
+                        onIncidenciasClick();
+                    }
+                });
+            }
         }
     }
 
@@ -273,7 +319,6 @@ public class MainViewController {
         }
     }
 
-    // Método helper para mostrar alertas al usuario
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);
@@ -307,9 +352,9 @@ public class MainViewController {
 
     @FXML private TableView<Incidencia> tablaIncidenciasView;
 
-    @FXML private void onUsuariosClick()     { cargarVista("tabla_usuarios.fxml"); }
-    @FXML private void onActivosClick()      { cargarVista("tabla_activos.fxml"); }
-    @FXML private void onIncidenciasClick()  { cargarVista("tabla_incidencias.fxml"); }
+    @FXML private void onUsuariosClick()       { cargarVista("tabla_usuarios.fxml"); }
+    @FXML private void onActivosClick()        { cargarVista("tabla_activos.fxml"); }
+    @FXML private void onIncidenciasClick()    { cargarVista("tabla_incidencias.fxml"); }
     @FXML private void onIntervencionesClick() { cargarVista("tabla_intervenciones.fxml"); }
 
     @FXML

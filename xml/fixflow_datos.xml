@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fixflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="fixflow_esquema.xsd">
+
+    <activos>
+        <activo>
+            <id>4</id>
+            <nombre>Caldera Central</nombre>
+            <ubicacion>Sótano -1</ubicacion>
+            <estado>Operativo</estado>
+        </activo>
+        <activo>
+            <id>5</id>
+            <nombre>Ascensor Planta 2</nombre>
+            <ubicacion>Edificio A - Planta 2</ubicacion>
+            <estado>Operativo</estado>
+        </activo>
+        <activo>
+            <id>6</id>
+            <nombre>Grupo Electrógeno</nombre>
+            <ubicacion>Sala Técnica Planta Baja</ubicacion>
+            <estado>En Mantenimiento</estado>
+        </activo>
+        <activo>
+            <id>7</id>
+            <nombre>Sistema de Climatización</nombre>
+            <ubicacion>Cubierta</ubicacion>
+            <estado>Operativo</estado>
+        </activo>
+        <activo>
+            <id>8</id>
+            <nombre>Cuadro Eléctrico Principal</nombre>
+            <ubicacion>Sótano -1</ubicacion>
+            <estado>Operativo</estado>
+        </activo>
+    </activos>
+
+    <incidencias>
+        <incidencia>
+            <id>1</id>
+            <titulo>Ruido extraño en caldera</titulo>
+            <descripcion>La caldera emite un pitido continuo al arrancar</descripcion>
+            <prioridad>Alta</prioridad>
+            <fecha>2026-04-25</fecha>
+            <idActivo>4</idActivo>
+            <estado>Abierta</estado>
+        </incidencia>
+        <incidencia>
+            <id>2</id>
+            <titulo>Ascensor parado en planta 2</titulo>
+            <descripcion>El ascensor no responde al botón de llamada</descripcion>
+            <prioridad>Crítica</prioridad>
+            <fecha>2026-04-28</fecha>
+            <idActivo>5</idActivo>
+            <estado>Abierta</estado>
+        </incidencia>
+        <incidencia>
+            <id>3</id>
+            <titulo>Fallo en climatización</titulo>
+            <descripcion>El sistema no enfría correctamente en verano</descripcion>
+            <prioridad>Media</prioridad>
+            <fecha>2026-04-29</fecha>
+            <idActivo>7</idActivo>
+            <estado>Abierta</estado>
+        </incidencia>
+        <incidencia>
+            <id>4</id>
+            <titulo>Revisión periódica grupo electrógeno</titulo>
+            <descripcion>Revisión trimestral programada</descripcion>
+            <prioridad>Baja</prioridad>
+            <fecha>2026-04-29</fecha>
+            <idActivo>6</idActivo>
+            <estado>Resuelta</estado>
+        </incidencia>
+    </incidencias>
+
+    <intervenciones>
+        <intervencion>
+            <id>1</id>
+            <observaciones>Incidencia resuelta: Revisión periódica grupo electrógeno</observaciones>
+            <fecha>2026-04-30</fecha>
+            <idIncidencia>4</idIncidencia>
+            <tecnico>Juan</tecnico>
+        </intervencion>
+    </intervenciones>
+
+</fixflow>

@@ -55,4 +55,16 @@ public class ActivoDAO {
         return lista;
     }
 
+    public boolean eliminarActivo(int idActivo) {
+        String sql = "DELETE FROM activos WHERE id_activo = ?";
+        try (Connection conn = Conexion.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, idActivo);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("❌ Error al eliminar activo: " + e.getMessage());
+            return false;
+        }
+    }
+
 }

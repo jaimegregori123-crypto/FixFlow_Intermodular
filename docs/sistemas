@@ -1,0 +1,149 @@
+# Informe Técnico de Entorno de Ejecución — FixFlow
+
+**Aplicación:** FixFlow — Gestión de Activos e Incidencias
+**Autor:** Jaime Gregori Almiñana
+**Módulo:** Sistemas Informáticos (0483)
+
+---
+
+## 1. Tipo de sistema donde se ejecuta
+
+FixFlow es una aplicación de escritorio que se ejecuta directamente en el **PC del usuario** (cliente).
+
+No requiere servidor dedicado ni infraestructura cloud. La base de datos MySQL puede ejecutarse en la misma máquina (localhost) o en un servidor local de red interna.
+
+**Justificación:** al tratarse de una aplicación de gestión interna para una empresa pequeña o mediana, el modelo cliente-servidor local es suficiente, económico y sencillo de mantener. No se necesita acceso externo ni alta disponibilidad.
+
+---
+
+## 2. Requisitos de hardware
+
+| Componente | Mínimo | Recomendado |
+|---|---|---|
+| CPU | Intel Core i3 / AMD Ryzen 3 | Intel Core i5 / AMD Ryzen 5 o superior |
+| RAM | 4 GB | 8 GB o más |
+| Almacenamiento | 500 MB libres | 2 GB libres |
+| Pantalla | 1280x720 | 1920x1080 o superior |
+| Red | No necesaria (uso local) | LAN si la BBDD es remota |
+
+**Justificación:** JavaFX requiere ciertos recursos gráficos para renderizar la interfaz correctamente. MySQL no es exigente en disco para el volumen de datos de esta aplicación.
+
+---
+
+## 3. Sistema operativo recomendado
+
+- **Sistema operativo principal:** Windows 10 / Windows 11 (64 bits)
+- **Versión recomendada:** Windows 11 22H2 o superior
+
+**Justificación:** la aplicación ha sido desarrollada y probada en Windows. JavaFX y MySQL son compatibles con Linux y macOS, pero la configuración de rutas y permisos puede variar. Para garantizar el funcionamiento sin ajustes adicionales se recomienda Windows.
+
+---
+
+## 4. Instalación del entorno
+
+### Paso 1 — Instalar Java 17
+
+1. Descarga el JDK 17 desde: https://adoptium.net
+2. Ejecuta el instalador y sigue los pasos.
+3. Verifica la instalación:
+```bash
+java -version
+```
+Debe mostrar: `openjdk version "17.x.x"`
+
+### Paso 2 — Instalar MySQL 8.0
+
+1. Descarga MySQL desde: https://dev.mysql.com/downloads/installer/
+2. Instala MySQL Server y MySQL Workbench (o phpMyAdmin).
+3. Durante la instalación, configura:
+   - Puerto: `3306` (por defecto)
+   - Usuario root con contraseña
+
+### Paso 3 — Crear la base de datos
+
+1. Abre phpMyAdmin o MySQL Workbench.
+2. Crea una base de datos llamada `fixflow_db`.
+3. Importa el script:
+```sql
+-- Ejecutar el archivo sql/script_creacion.sql
+```
+O desde consola:
+```bash
+mysql -u root -p fixflow_db < sql/script_creacion.sql
+```
+
+### Paso 4 — Configurar la conexión
+
+Abre el archivo: src/main/java/com/fixflow/database/Conexion.java
+
+Y ajusta los valores:
+```java
+private static final String URL = "jdbc:mysql://localhost:3306/fixflow_db";
+private static final String USER = "root";
+private static final String PASSWORD = "tu_contraseña";
+```
+
+### Paso 5 — Ejecutar la aplicación
+
+Abre el proyecto en **IntelliJ IDEA** y ejecuta la clase `Main.java`.
+
+O con Maven desde terminal:
+```bash
+mvn javafx:run
+```
+
+---
+
+## 5. Usuarios y permisos
+
+### Usuarios del sistema operativo
+
+| Usuario SO | Permisos necesarios |
+|---|---|
+| Usuario estándar | Suficiente para ejecutar la app |
+| Administrador | Necesario para instalar Java y MySQL |
+
+### Usuarios de la aplicación
+
+| Rol | Permisos en la app |
+|---|---|
+| Administrador | Acceso completo: activos, usuarios, incidencias, intervenciones.
+| Técnico | Acceso a activos, incidencias e intervenciones. Sin acceso a gestión de usuarios.
+
+### Estructura de carpetas relevante
+
+FixFlow_Intermodular/
+├── src/           → Código fuente
+├── sql/           → Scripts de base de datos
+├── xml/           → Datos exportados y esquema XSD
+├── docs/          → Documentación técnica
+└── diagrams/      → Diagramas E/R y modelo relacional
+
+---
+
+## 6. Mantenimiento básico
+
+| Tarea | Frecuencia | Acción |
+|---|---|---|
+| Copia de seguridad de la BD | Semanal | Exportar desde phpMyAdmin como SQL |
+| Actualización de Java | Anual | Descargar nueva versión LTS |
+| Revisión de logs de errores | Mensual | Revisar consola de IntelliJ o logs del sistema |
+| Limpieza de registros antiguos | Semestral | Eliminar incidencias resueltas antiguas desde la app |
+
+### ¿Qué hacer si falla?
+
+- **La app no arranca:** verificar que Java 17 está instalado correctamente.
+- **Error de conexión a BD:** comprobar que MySQL está iniciado y que los datos de `Conexion.java` son correctos.
+- **Pantalla en blanco:** revisar que el archivo `style.css` está en `src/main/resources/`.
+
+---
+
+## 7. Evidencias de funcionamiento
+
+- Captura del login
+
+
+- Captura del dashboard
+- Captura de la gestión de incidencias
+- Captura del botón Resolver funcionando
+

@@ -31,7 +31,10 @@
             <TextField fx:id="txtUbicacion" promptText="Ubicación" />
             <TextField fx:id="txtEstado" promptText="Estado" />
         </HBox>
-        <Button fx:id="btnAgregarActivo" mnemonicParsing="false" text="Agregar Activo" />
+        <HBox alignment="CENTER" spacing="10.0">
+            <Button fx:id="btnAgregarActivo" mnemonicParsing="false" text="Agregar Activo" />
+            <Button fx:id="btnEliminarActivo" mnemonicParsing="false" text="🗑  Eliminar Seleccionado" />
+        </HBox>
     </VBox>
 
 </VBox>

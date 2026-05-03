@@ -69,7 +69,15 @@ public class IncidenciaDAO {
         }
     }
 
-    public boolean reportarIncidencia(Incidencia inc) {
-        return insertarIncidencia(inc);
+    public boolean eliminarIncidencia(int idIncidencia) {
+        String sql = "DELETE FROM incidencias WHERE id_incidencia = ?";
+        try (Connection conn = Conexion.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, idIncidencia);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("❌ Error al eliminar incidencia: " + e.getMessage());
+            return false;
+        }
     }
 }

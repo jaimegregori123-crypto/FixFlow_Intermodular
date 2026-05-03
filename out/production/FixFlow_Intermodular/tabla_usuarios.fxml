@@ -32,6 +32,7 @@
             <ComboBox fx:id="txtUserRol" prefWidth="150.0" />
             <PasswordField fx:id="txtUserPassword" promptText="Contraseña" />
             <Button fx:id="btnAgregarUsuario" mnemonicParsing="false" text="Agregar Usuario" />
+            <Button fx:id="btnEliminarUsuario" mnemonicParsing="false" text="🗑  Eliminar Seleccionado" />
         </HBox>
     </VBox>
 
