@@ -140,10 +140,18 @@ FixFlow_Intermodular/
 
 ## 7. Evidencias de funcionamiento
 
-- Captura del login
+### Login
+![Login](captura-login.png)
 
+### Dashboard
+![Dashboard](captura-dashboard.png)
 
-- Captura del dashboard
-- Captura de la gestión de incidencias
-- Captura del botón Resolver funcionando
+### Tabla de activos
+![Activos](captura-tabla-activos.png)
+
+### Tabla de Incidencias
+![Incidencias](captura-tabla-incidencias.png)
+
+### Tabla Intervenciones
+![Intervenciones](captura-resolver.png)
 
